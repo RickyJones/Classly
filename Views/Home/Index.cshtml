@@ -1,0 +1,130 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .stat-banner {
+        border-style: solid;
+        border-width: 3px;
+        border-radius: 8px;
+        border-color: darkorange;
+        background-color: #f3b88c3d;
+        padding: 30px;
+    }
+    .stat-banner  span, label {
+        color: darkorange;
+        font-weight: bolder;
+    }
+    .stat-banner  label {
+        color: slategrey;
+        font-weight:unset;
+    }
+    .stat-banner  span {
+        font-size: x-large;
+    }
+    a {
+        color: darkorange;
+    }
+</style>
+
+<section class="py-5 text-center container"> 
+    <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-bold">Your Learning Dashboard</h1>
+        <p class="lead text-body-secondary">Choose where you'd like to go</p> 
+    </div> 
+    </div>
+    </section>
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <svg aria-label="Placeholder: Thumbnail"
+                         class="bd-placeholder-img card-img-top" height="225" preserveAspectRatio="xMidYMid slice"
+                         role="img" width="100%" xmlns="http://www.w3.org/2000/svg">
+                        <title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#55595c"></rect>
+                    </svg>
+                    <div class="card-body" style="text-align:center;">
+                        <p class="card-text">
+                            Find Your Perfect Tutor
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="btn-group">
+@*                                 <button type="button"
+                                        class="btn btn-sm btn-outline-secondary">
+                                    View
+                                </button> <button type="button"
+                                                  class="btn btn-sm btn-outline-secondary">
+                                    Edit
+                                </button> *@
+                                <a href="#">Go to Marketplace...</a>
+                            </div> @* <small class="text-body-secondary">9 mins</small> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <svg aria-label="Placeholder: Thumbnail"
+                         class="bd-placeholder-img card-img-top" height="225" preserveAspectRatio="xMidYMid slice"
+                         role="img" width="100%" xmlns="http://www.w3.org/2000/svg">
+                        <title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#55595c"></rect>
+                    </svg>
+                    <div class="card-body" style="text-align:center;">
+                        <p class="card-text">
+                            AI-Powered Study Tools
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="btn-group">
+                                @*                                 <button type="button"
+                                        class="btn btn-sm btn-outline-secondary">
+                                    View
+                                </button> <button type="button"
+                                                  class="btn btn-sm btn-outline-secondary">
+                                    Edit
+                                </button> *@
+                                <a href="#">Go to Study Lab...</a>
+                            </div> @* <small class="text-body-secondary">9 mins</small> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <svg aria-label="Placeholder: Thumbnail"
+                         class="bd-placeholder-img card-img-top" height="225" preserveAspectRatio="xMidYMid slice"
+                         role="img" width="100%" xmlns="http://www.w3.org/2000/svg">
+                        <title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#55595c"></rect>
+                    </svg>
+                    <div class="card-body" style="text-align:center;">
+                        <p class="card-text">
+                            Join the Community
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="btn-group">
+                                @*                                 <button type="button"
+                                        class="btn btn-sm btn-outline-secondary">
+                                    View
+                                </button> <button type="button"
+                                                  class="btn btn-sm btn-outline-secondary">
+                                    Edit
+                                </button> *@
+                                <a href="#">Go to Community...</a>
+                            </div> @* <small class="text-body-secondary">9 mins</small> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="row stat-banner">
+            <div class="col" style="text-align: center;"><span>0</span><br/><label>Lessons Completed</label></div>
+            <div class="col" style="text-align: center;"><span>0</span><br /><label>Day Streak</label></div>
+            <div class="col" style="text-align: center;"><span>12</span><br /><label>Community Points</label></div>
+        </div>
+    </div>
+</div>
