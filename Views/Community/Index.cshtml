@@ -1,0 +1,103 @@
+﻿<h1>Community</h1>
+<p>Connect, share and learn togther.</p>
+
+<input class="form-control" name="search" placeholder="Search posts or users" />
+<br />
+<div class="row">
+    <div class="col col-10">
+        <div class="row">
+            <div class="col col-3 card shadow-sm">
+                <h3 class="mt-2">Trending Topics</h3>
+                <div class="container">
+                    <div class="row mb-3">
+                        <!-- Row with 2 pills -->
+                        <div class="col-6">
+                            <span class="badge rounded-pill bg-secondary text-center">#IELTS</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="badge rounded-pill bg-secondary text-center">#SpeakingTips</span>
+                        </div>
+
+                        <!-- Row with 1 pill, same width as col-6, centered -->
+                        <div class="col-12 d-flex justify-content-center mt-2">
+                            <div class="col-6">
+                                <span class="badge rounded-pill bg-secondary text-center">#BritishPhrases</span>
+                            </div>
+                        </div>
+                        <!-- Row with 1 pill, same width as col-6, centered -->
+                        <div class="col-12 d-flex justify-content-center mt-2">
+                            <div class="col-6">
+                                <span class="badge rounded-pill bg-secondary text-center">#BritishPhrases</span>
+                            </div>
+                        </div>
+
+                        <!-- Row with 2 pills -->
+                        <div class="col-6 mt-2">
+                            <span class="badge rounded-pill bg-secondary text-center">#DailyChallenge</span>
+                        </div>
+                        <div class="col-6 mt-2">
+                            <span class="badge rounded-pill bg-secondary text-center">#Grammar</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col col-9">
+                <div class="message-poster card shadow-sm p-4 mb-4">
+                    <form>
+                        <textarea style="height: 150px;" placeholder="Share your thoughts or practice your English..." class="w-100 p-1"></textarea>
+                        <select class="form-control-sm" style="width:80%; border-style: none;">
+                            <option>Grammar</option>
+                        </select>
+                        <button class="btn btn-primary ps-4 pe-4" style="float:right;" asp-area="" asp-action="Post"><b>Post</b></button>
+                        <p><i>AI will check your post for English suggestions.</i></p>
+                    </form>
+                </div>
+                <div class="message-poster card shadow-sm p-4">
+                    <div class="row align-items-center message-header">
+                        <!-- Avatar column -->
+                        <div class="col-auto">
+                            <div class="avatar-bg d-flex justify-content-center align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="darkorange" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Text column -->
+                        <div class="col">
+                            <p class="mb-0">Dan Einon</p>
+                            <small>2 hours ago</small>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col">
+                            <p>Just completed my first week of English lessons &#128640; </p>
+                            <img style="border-radius:10px; width: 100%; height: auto; object-fit: cover;" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.r9zNSKTlMZ-GbGR__BfWPgHaD_%3Fcb%3D12%26pid%3DApi&f=1&ipt=554c6d00829cff15dbb515bd49820223bda54b38b99cdcaaf4b9e8530df648e8&ipo=images" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col col-2">
+        <div class="card shadow-sm p-2">
+            <h3>Weekly Challenges</h3>
+            <p>Write 3 posts this week</p>
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-primary" style="width: 10%"></div>
+            </div>
+            <p>Comment on 5 classmates' posts'</p>
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-primary" style="width: 25%"></div>
+            </div>
+            <p>Get 10 likes on your posts</p>
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-primary" style="width: 50%"></div>
+            </div>
+            <br />
+            <button class="btn btn-primary">View Leaderboard</button>
+        </div>
+    </div>
+</div>
