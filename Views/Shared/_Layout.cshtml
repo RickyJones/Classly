@@ -16,7 +16,7 @@
         .rounded-pill {
             width: fit-content;
             padding-left: 10px;
-            padding-right:10px;
+            padding-right: 10px;
             padding-top: 8px;
             padding-bottom: 8px;
         }
@@ -25,16 +25,20 @@
             background-color: darkorange;
             color: white;
         }
+
         p {
             color: dimgrey;
         }
+
         .bg-primary {
             background-color: darkorange !important;
         }
+
         .bg-secondary {
             background-color: #80808029 !important;
             color: grey;
         }
+
         .avatar-bg {
             background-color: #ff8c004f;
             width: 50px;
@@ -70,7 +74,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
                         </li>
                         <li class="nav-item action-li">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
+                            <a class="nav-link text-white" onclick="OnBasketClick()">Basket<span id="basket-cnt" class="badge text-bg-danger"></span></a>
                         </li>
                     </ul>
                 </div>
@@ -84,13 +88,58 @@
     </div>
 
     <footer class="border-top footer text-muted" style="background-color: #1a1a1bf5;">
-        <div class="container">
+@*         <div class="container">
             &copy; 2025 - Classly - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+            <div class="row">
+                <div class="col-12 col-md">
+                    <img class="mb-2" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt=""
+                         width="24" height="19"> <small class="d-block mb-3 text-body-secondary">© 2017–2025</small>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Features</h5>
+                    <ul class="list-unstyled text-small">
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
+                        <li class="mb-1">
+                            <a class="link-secondary text-decoration-none" href="#">Stuff for developers</a>
+                        </li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Resources</h5>
+                    <ul class="list-unstyled text-small">
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another resource</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>About</h5>
+                    <ul class="list-unstyled text-small">
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Locations</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div> *@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        let selectedCourses = [];
+
+        function OnBasketClick() {
+
+            location.href = '/Marketplace/Basket?item='+selectedCourses.join('&item=');
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

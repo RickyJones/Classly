@@ -1,0 +1,47 @@
+﻿@using Classly.Models.Courses
+@model List<Course>
+
+<div class="container py-3">
+    <header>
+        <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+            <h1 class="display-4 fw-normal text-body-emphasis">Pricing</h1>
+            <p class="fs-5 text-body-secondary">
+                Dynamic course catalogue to add courses to basket
+            </p>
+        </div>
+    </header>
+    <main>
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+            @foreach(var course in Model)
+            {
+                <div class="col">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">@course.Name</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">
+                                <small class="text-body-secondary fw-light">@course.Description</small>
+                            </h1>
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>@course.DateCommencing</li>
+                                <li>Start time: @course.StartTime @course.DuarationMins (Minutes)</li>
+                                <li>Tutor: @course.Tutor.Firstname @course.Tutor.Lastname</li>
+                                <li>£@course.Price</li>
+                            </ul> <button type="button" class="w-100 btn btn-lg btn-primary" onclick="AddToBasket('@course.Id')" @* href="/Basket" *@>Sign up</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </main>
+</div>
+<script>
+    function AddToBasket(id) {
+        let currCnt = $('#basket-cnt').text();
+        currCnt = currCnt == '' ? 0 : currCnt;
+        currCnt++;
+        $('#basket-cnt').text(currCnt);
+        selectedCourses.push(id);
+    }
+</script>
