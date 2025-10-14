@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Classly.Models;
+using Classly.Services.AI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Classly.Controllers
@@ -15,6 +16,7 @@ namespace Classly.Controllers
 
         public IActionResult Index()
         {
+            //var airesp = ChatGPTService.AskAI("Are you working?");
             return View();
         }
 
