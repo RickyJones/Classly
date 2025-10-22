@@ -1,18 +1,30 @@
 ﻿using Classly.Models;
 using Classly.Models.Login;
 using Classly.Services.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace Classly.Controllers
 {
     public class LoginController : Controller
     {
+        private  SignInManager<User> _signInManager {  get; set; }
+        private IUserService _userService {  get; set; }
+
+        public LoginController(SignInManager<User> signIn, IUserService userService)
+        {
+            _signInManager = signIn;
+            _userService = userService;
+        }
+
         public IActionResult Register() { return View(); }
         [HttpPost]
-        public IActionResult Register(User user)
+        public async Task<IActionResult> Register(User user)
         {
-            var registered = UserService.RegisterUser(user.Name, user.Email, user.Password);
-            if (registered) return RedirectToAction("Login");
+            CancellationToken cancellationToken = HttpContext.RequestAborted;
+            var registered = await _userService.CreateAsync(user, cancellationToken);
+            if (registered.Succeeded) return RedirectToAction("Login");
 
             //error
             return View();
@@ -22,10 +34,20 @@ namespace Classly.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(Login login)
+        public async Task<IActionResult> Login(Login login)
         {
-            var verified = UserService.VerifyLogin(login.Email, login.Password);
-            if (verified) return RedirectToAction("index", "home");
+            var user = _userService.GetUser(login.Email);
+
+            if (user != null)
+            {
+                var result = await _signInManager.PasswordSignInAsync(user.Email, login.Password, true, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    // Login successful
+                    return RedirectToAction("index", "home");
+                }
+            }
+
 
             ViewBag.Error = "Incorrect email / password";
             return View();

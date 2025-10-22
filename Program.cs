@@ -1,7 +1,20 @@
+using Classly.Models;
+using Classly.Services.Data;
+using Microsoft.AspNetCore.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddSingleton(TimeProvider.System);
+
+builder.Services.AddIdentityCore<User>()
+    .AddUserStore<UserService>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+
 
 var app = builder.Build();
 
@@ -22,6 +35,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Login}/{id?}");
 
 app.Run();

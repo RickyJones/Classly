@@ -3,10 +3,12 @@ using System.Diagnostics;
 using Classly.Models;
 using Classly.Services.AI;
 using Classly.Services.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Classly.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -19,7 +21,7 @@ namespace Classly.Controllers
         public IActionResult Index()
         {
             //var airesp = ChatGPTService.AskAI("Are you working?");
-            var gotIt = UserService.GetUser("test@mail.com");
+            //var gotIt = UserService.GetUser("test@mail.com");
             return View();
         }
 
