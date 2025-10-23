@@ -1,20 +1,21 @@
 ﻿using Classly.Models;
 using Classly.Models.Login;
 using Classly.Services.Data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace Classly.Controllers
 {
     public class LoginController : Controller
     {
-        private  SignInManager<User> _signInManager {  get; set; }
         private IUserService _userService {  get; set; }
 
-        public LoginController(SignInManager<User> signIn, IUserService userService)
+        public LoginController(IUserService userService)
         {
-            _signInManager = signIn;
             _userService = userService;
         }
 
@@ -24,12 +25,12 @@ namespace Classly.Controllers
         {
             CancellationToken cancellationToken = HttpContext.RequestAborted;
             var registered = await _userService.CreateAsync(user, cancellationToken);
-            if (registered.Succeeded) return RedirectToAction("Login");
+            if (registered != null) return RedirectToAction("Login");
 
             //error
             return View();
         }
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
             return View();
         }
@@ -38,23 +39,37 @@ namespace Classly.Controllers
         {
             var user = _userService.GetUser(login.Email);
 
-            if (user != null)
+            if (user == null || !_userService.ValidatePassword(login.Password, user.Password))
             {
-                var result = await _signInManager.PasswordSignInAsync(user.Email, login.Password, true, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    // Login successful
-                    return RedirectToAction("index", "home");
-                }
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View();
             }
 
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.Name),
+        new Claim(ClaimTypes.Email, user.Email)
+    };
 
-            ViewBag.Error = "Incorrect email / password";
-            return View();
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true
+            };
+
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
+
+            return RedirectToAction("Index", "Home");
         }
-        public IActionResult Logout() { 
 
-            return new RedirectToActionResult(nameof(Login), "Login", null);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Login");
         }
         public IActionResult ForgotPassword() { 
             return View();

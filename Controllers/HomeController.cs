@@ -1,10 +1,12 @@
-using System.Configuration;
-using System.Diagnostics;
 using Classly.Models;
 using Classly.Services.AI;
 using Classly.Services.Data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Configuration;
+using System.Diagnostics;
 
 namespace Classly.Controllers
 {
@@ -18,10 +20,12 @@ namespace Classly.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //var airesp = ChatGPTService.AskAI("Are you working?");
             //var gotIt = UserService.GetUser("test@mail.com");
+            //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            //return RedirectToAction("Login", "Login");
             return View();
         }
 
