@@ -13,6 +13,11 @@
             border-radius: 8px;
         }
 
+        .action-li-outline {
+            border-color: darkorange;
+            border-radius: 8px;
+        }
+
         .rounded-pill {
             width: fit-content;
             padding-left: 10px;
@@ -45,36 +50,29 @@
             height: 50px;
             border-radius: 30px;
         }
+
+        .navbar-subs {
+            border-top-color: orange;
+            border-bottom-color: orange;
+            border-bottom-style: solid;
+
+        }
     </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-4">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Classly</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Classly</a>
+                
+                <div class="d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Marketplace" asp-action="Index">Marketplace</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="StudyLab" asp-action="Index">Study Lab</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Community" asp-action="Index">Community</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
-                        </li>
                         <li class="nav-item action-li">
                             <a class="nav-link text-white" onclick="OnBasketClick()">Basket<span id="basket-cnt" class="badge text-bg-danger"></span></a>
+                        </li>
+                        <li class="nav-item action-li-outline ms-3">
+                            <a class="nav-link text-black" href="@Url.Action("Logout", "Login")">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -82,6 +80,35 @@
         </nav>
     </header>
     <div class="container">
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <nav class="navbar navbar-subs navbar-expand-sm navbar-toggleable-sm navbar-light bg-white">
+                <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 justify-content-center">
+                        <li class="nav-item me-4">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Marketplace" asp-action="Index">Marketplace</a>
+                        </li>
+                        <li class="nav-item me-4">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="StudyLab" asp-action="Index">Study Lab</a>
+                        </li>
+                        <li class="nav-item me-4">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Community" asp-action="Index">Community</a>
+                        </li>
+                        <li class="nav-item me-4">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        }
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
