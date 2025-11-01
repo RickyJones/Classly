@@ -8,6 +8,7 @@ namespace Classly.Services.Data
     public interface IUserService
     {
         public User? GetUser(string email);
+        public Task<User?> GetUser(Guid id);
         public Task<User> CreateAsync(User user, CancellationToken cancellationToken);
         public bool ValidatePassword(string inputPassword, string storedHash);
     }
@@ -138,6 +139,33 @@ namespace Classly.Services.Data
         public bool ValidatePassword(string inputPassword, string storedHash)
         {
             return BCrypt.Net.BCrypt.Verify(inputPassword, storedHash);
+        }
+
+        public async Task<User?> GetUser(Guid id)
+        {
+            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            connection.Open();
+
+            string query = "SELECT * FROM users WHERE id = @id";
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@id", id);
+
+            using var reader = command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                Console.WriteLine($"ID: {reader["id"]}, Name: {reader["name"]}, Email: {reader["email"]}");
+                return new User
+                {
+                    Id = Guid.Parse(reader["id"].ToString() ?? "0"),
+                    Name = reader["name"]?.ToString() ?? string.Empty,
+                    Email = reader["email"]?.ToString() ?? string.Empty,
+                    Password = reader["password"]?.ToString()
+                };
+            }
+
+            Console.WriteLine("User not found.");
+            return null;
         }
     }
 }
