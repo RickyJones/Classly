@@ -1,7 +1,7 @@
 ﻿
 <form method="post" action="login" class="form-signin">
 @*     <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> *@
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <h1 class="h3 mb-3 font-weight-normal">Login</h1>
     @if (ViewBag.Error != null)
     {
         <div class="alert alert-danger">
@@ -10,6 +10,7 @@
     }
     <label for="inputEmail" class="sr-only">Email address</label>
     <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+    <br/>
     <label for="inputPassword" class="sr-only">Password</label>
     <input name="password" type="password" id="inputPassword" class="form-control mb-3" placeholder="Password" required="">
 @*     <div class="checkbox mb-3">
@@ -18,5 +19,7 @@
         </label>
     </div> *@
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+    <p style="float:right;"><i>Don't have an account? You can register <a asp-controller="Login" asp-action="Register">HERE</a>.</i></p>
     <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
 </form>

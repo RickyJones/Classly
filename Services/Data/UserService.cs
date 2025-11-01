@@ -29,7 +29,7 @@ namespace Classly.Services.Data
                 Console.WriteLine($"ID: {reader["id"]}, Name: {reader["name"]}, Email: {reader["email"]}");
                 return new User
                 {
-                    Id = int.Parse(reader["id"].ToString() ?? "0"),
+                    Id = Guid.Parse(reader["id"].ToString() ?? "0"),
                     Name = reader["name"]?.ToString() ?? string.Empty,
                     Email = reader["email"]?.ToString() ?? string.Empty,
                     Password = reader["password"]?.ToString()
@@ -105,7 +105,7 @@ namespace Classly.Services.Data
             {
                 return new User
                 {
-                    Id = int.Parse(reader["id"].ToString()),
+                    Id = Guid.Parse(reader["id"].ToString()),
                     Name = reader["name"].ToString(),
                     Email = reader["email"].ToString(),
                     Password = reader["password"].ToString()

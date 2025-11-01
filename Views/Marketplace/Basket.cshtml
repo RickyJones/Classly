@@ -1,32 +1,51 @@
 ﻿@using Classly.Models.Courses
 @model List<Course>
 
+    @{
+        var promo = 5;
+    }
+
 <div class="row g-5">
     <div class="col-md-5 col-lg-4 order-md-last">
-        <h4 class="d-flex justify-content-between align-items-center mb-3"> <span class="text-primary">Your cart</span>
-            <span class="badge bg-primary rounded-pill">@Model.Count</span> </h4>
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Your cart</span>
+            <span class="badge bg-primary rounded-pill">@Model.Count</span>
+        </h4>
         <ul class="list-group mb-3">
-            @foreach(var c in Model)
+            @foreach (var c in Model)
             {
-                <li class="list-group-item d-flex justify-content-between lh-sm">
+                <li class="list-group-item d-flex justify-content-between lh-sm align-items-center">
                     <div>
-                        <h6 class="my-0">@c.Name</h6> <small class="text-body-secondary">@c.Description</small>
-                    </div> <span class="text-body-secondary">£@c.Price</span>
+                        <h6 class="my-0">@c.Name</h6>
+                        <small class="text-body-secondary">@c.Description</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="text-body-secondary me-3">£@c.Price</span>
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeFromBasket('@c.Id')">Remove</button>
+
+                    </div>
                 </li>
             }
             <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
                 <div class="text-success">
-                    <h6 class="my-0">Promo code</h6> <small>EXAMPLECODE</small>
-                </div> <span class="text-success">−£5</span>
+                    <h6 class="my-0">Promo code</h6>
+                    <small>EXAMPLECODE</small>
+                </div>
+                <span class="text-success">−£5</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between"> <span>Total (GBP)</span> <strong>£20</strong>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Total (GBP)</span>
+                <strong>£@(Model.Sum(c => c.Price) - 5)</strong>
             </li>
         </ul>
         <div class="card p-2">
-            <div class="input-group"> <input type="text" class="form-control" placeholder="Promo code"> <button
-                    type="submit" class="btn btn-secondary">Redeem</button> </div>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Promo code">
+                <button type="submit" class="btn btn-secondary">Redeem</button>
+            </div>
         </div>
     </div>
+
     <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Billing address</h4>
         <div class="needs-validation" novalidate="">
@@ -143,3 +162,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    function removeFromBasket(courseId) {
+        $.ajax({
+            url: '/Basket/RemoveCourseFromBasket',
+            type: 'POST',
+            data: { courseId: courseId },
+            success: function (count) {
+                console.log('Course removed. Basket now has ' + count + ' item(s).');
+                location.reload(); // Refresh to update basket view
+            },
+            error: function (xhr, status, error) {
+                console.error('Error removing course:', error);
+            }
+        });
+    }
+</script>

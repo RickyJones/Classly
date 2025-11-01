@@ -38,10 +38,19 @@
 </div>
 <script>
     function AddToBasket(id) {
-        let currCnt = $('#basket-cnt').text();
-        currCnt = currCnt == '' ? 0 : currCnt;
-        currCnt++;
-        $('#basket-cnt').text(currCnt);
-        selectedCourses.push(id);
+
+         $.ajax({
+        url: '/Basket/AddToBasket',
+        type: 'POST',
+        data: { courseId: id },
+        success: function (count) {
+            console.log('Course added to basket. Total items:', count);
+            $('#basket-cnt').text(count); // Update basket count in UI
+        },
+        error: function (xhr, status, error) {
+            console.error('Error adding course:', error);
+        }
+    });
+
     }
 </script>

@@ -68,12 +68,16 @@
                 
                 <div class="d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
-                        <li class="nav-item action-li">
-                            <a class="nav-link text-white" onclick="OnBasketClick()">Basket<span id="basket-cnt" class="badge text-bg-danger"></span></a>
-                        </li>
-                        <li class="nav-item action-li-outline ms-3">
-                            <a class="nav-link text-black" href="@Url.Action("Logout", "Login")">Logout</a>
-                        </li>
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item action-li">
+                                <a class="nav-link text-white" asp-controller="Marketplace" asp-action="Basket">Basket<span id="basket-cnt" class="badge text-bg-danger"></span></a>
+                            </li>
+
+                            <li class="nav-item action-li-outline ms-3">
+                                <a class="nav-link text-black" href="@Url.Action("Logout", "Login")">Logout</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

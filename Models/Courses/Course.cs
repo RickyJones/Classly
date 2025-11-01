@@ -7,6 +7,7 @@ namespace Classly.Models.Courses
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public Uri? Image {  get; set; }
         public Tutor Tutor { get; set; } = new Tutor();
         public DateOnly DateCommencing { get; set; }
         public TimeOnly StartTime { get; set; }

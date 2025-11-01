@@ -1,19 +1,28 @@
 ﻿using Classly.Dummy.Datasets;
+using Classly.Services.Data;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Classly.Controllers
 {
     public class MarketplaceController : Controller
     {
-        public IActionResult Index()
+        private readonly ICourseService _courseService;
+        public MarketplaceController(ICourseService courseService)
         {
-            var courses = CoursesDummyDataset.GetCourses();
+            _courseService = courseService;       
+        }
+        public async Task<IActionResult> Index()
+        {
+            var courses = await _courseService.GetAllCoursesAsync();//CoursesDummyDataset.GetCourses();
             return View(courses);
         }
 
-        public IActionResult Basket(List<Guid> item)
+        public async Task<IActionResult> Basket()
         {
-            var courses = CoursesDummyDataset.GetCourses().Where(x => item.Contains(x.Id)).ToList();
+            var courseIds = JsonConvert.DeserializeObject<List<Guid>>(HttpContext.Session.GetString("BasketCourseIds") ?? "") ?? [];
+            var courses = await _courseService.GetAllCoursesAsync();
+            courses = courses.Where(c => courseIds.Contains(c.Id))?.ToList() ?? [];
             return View(courses);
         }
     }
