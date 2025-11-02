@@ -1,0 +1,7 @@
+﻿@* <iframe src="@ViewBag.ReceiptUrl"/> *@
+@if(ViewBag.Success)
+{
+    <h1>Payment Successful!</h1>
+
+    <p>A copy of your recipt can be found <a href="@ViewBag.ReceiptUrl">HERE</a></p>
+}

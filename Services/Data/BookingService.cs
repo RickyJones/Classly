@@ -1,4 +1,5 @@
-﻿using Classly.Models.Booking;
+﻿using Classly.Models;
+using Classly.Models.Booking;
 using Classly.Models.Courses;
 using MySqlConnector;
 
@@ -19,9 +20,9 @@ namespace Classly.Services.Data
         private readonly IUserService _userService;
         private readonly ICourseService _courseService;
 
-        public BookingService(string connectionString, IUserService userService, ICourseService courseService)
+        public BookingService(IUserService userService, ICourseService courseService)
         {
-            _connectionString = connectionString;
+            _connectionString = TestKeys.localDBCon;
             _userService = userService;
             _courseService = courseService;
         }
