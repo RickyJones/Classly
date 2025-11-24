@@ -1,0 +1,10 @@
+﻿@using Classly.Models.AIGen
+@model AINotesResponse
+
+<h1>Notes / Tasks</h1>
+
+<h2>Tables</h2>
+@Html.Raw(Model.tablesResponse)
+
+<h2>Tasks</h2>
+@Model.tasks

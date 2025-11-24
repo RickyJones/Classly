@@ -110,6 +110,11 @@
                         <li class="nav-item me-4">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
                         </li>
+                        @if(User.Claims.Any(x => x.Type == "IsTutor")){
+                            <li class="nav-item me-4">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="CourseNotes" asp-action="Index">Course Notes</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,0 +1,50 @@
+﻿
+
+@{
+    ViewData["Title"] = "Class Notes Upload";
+}
+
+<h2>Submit Class Notes</h2>
+
+<form asp-action="UploadStudyNotes" asp-controller="CourseNotes" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="studentId" value="@ViewBag.StudentId"/>
+    <div class="form-group">
+        <label for="RichText">Lesson notes</label>
+        <aside>Enter you lesson notes here. Our AI assitant will review them and create homework and follow up tasks based on the difficulty level you select.</aside>
+        <!-- Rich Text Editor (you can wire up TinyMCE, CKEditor, or Quill here) -->
+        <textarea id="RichText" name="RichText" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="FileUpload">Or Upload a File</label>
+        <input type="file" id="FileUpload" name="FileUpload" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Difficulty">Difficulty Level</label>
+        <select id="Difficulty" name="Difficulty" class="form-control">
+            <option value="">-- Select Level --</option>
+            <option value="A1">A1 (Beginner)</option>
+            <option value="A2">A2 (Elementary)</option>
+            <option value="B1">B1 (Intermediate)</option>
+            <option value="B2">B2 (Upper Intermediate)</option>
+            <option value="C1">C1 (Advanced)</option>
+            <option value="C2">C2 (Proficient)</option>
+        </select>
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">Send to Server</button>
+</form>
+
+@section Scripts {
+    <!-- Example: TinyMCE integration -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#RichText',
+            menubar: false,
+            plugins: 'lists link',
+            toolbar: 'undo redo | bold italic underline | bullist numlist | link'
+        });
+    </script>
+}

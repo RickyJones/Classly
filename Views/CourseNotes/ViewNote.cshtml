@@ -1,0 +1,19 @@
+﻿@using Classly.Models.Courses
+@model CourseNote
+
+@{
+    
+}
+
+<h1>Notes</h1>
+
+<label>Teacher: @ViewBag.Teacher</label>
+<label>Student: @ViewBag.Student</label>
+
+<h3>Content</h3>
+<label>Difficulty: @Model.Difficulty</label>
+@Html.Raw(Model.Notes)
+
+<h3>Homework</h3>
+@Html.Raw(Model.Homework)
+

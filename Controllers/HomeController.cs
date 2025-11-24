@@ -20,12 +20,16 @@ namespace Classly.Controllers
             _logger = logger;
         }
 
+        public IActionResult Landing()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Index()
         {
-            //var airesp = ChatGPTService.AskAI("Are you working?");
-            //var gotIt = UserService.GetUser("test@mail.com");
-            //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            //return RedirectToAction("Login", "Login");
+            if (!HttpContext.User.Identity.IsAuthenticated) {
+                return RedirectToAction("Landing");
+            }
             return View();
         }
 

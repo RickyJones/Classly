@@ -1,0 +1,31 @@
+﻿@using Classly.Models.Courses
+@using Classly.Services.Data
+@model List<CourseNote>
+@inject IUserService userService
+
+<h1>Course Notes</h1>
+
+@if(Model == null){
+<form method="post">
+    <label>Please select a student</label>
+    <select name="studentId" class="form-select">
+        @foreach (var student in await userService.GetStudentsAsync())
+        {
+            <option value="@student.Id">@student.Name (@student.Email)</option>
+        }
+    </select>
+    <br/>
+    <button class="btn btn-primary" type="submit">Get Student Notes</button>
+</form>
+}
+else {
+
+    <button class="btn btn-primary" onclick="location.href='@Url.Action("UploadStudyNotes", new {studentId = ViewBag.StudentId})'">New Session</button>
+<ul>
+    @foreach (var note in Model)
+    {
+            <li>@note.CreatedAt @note.Difficulty <span><a href="@Url.Action("ViewNote", new {noteId = note.Id})">View Notes</a></span></li>
+    }
+</ul>
+}
+

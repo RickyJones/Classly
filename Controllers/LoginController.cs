@@ -24,6 +24,7 @@ namespace Classly.Controllers
         public async Task<IActionResult> Register(User user)
         {
             CancellationToken cancellationToken = HttpContext.RequestAborted;
+            //user.IsTutor = HttpContext.Request.Form.
             var registered = await _userService.CreateAsync(user, cancellationToken);
             if (registered != null) return RedirectToAction("Login");
 
@@ -46,10 +47,16 @@ namespace Classly.Controllers
             }
 
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.Name),
-        new Claim(ClaimTypes.Email, user.Email)
-    };
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            if (user.IsTutor)
+            {
+                claims.Add(new Claim("IsTutor", user.IsTutor.ToString()));
+            }
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);

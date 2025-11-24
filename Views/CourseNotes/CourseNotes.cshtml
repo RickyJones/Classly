@@ -1,0 +1,42 @@
+﻿@using Classly.Models.Courses
+@model List<CourseNote>
+@{
+    ViewData["Title"] = "Course Notes";
+    var currentNoteId = ViewBag.CurrentNoteId;
+    var currentNote = Model.First(x => x.Id == currentNoteId);
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar with date stamps -->
+        <div class="col-md-3 border-end">
+            <h5>Notes History</h5>
+            <ul class="list-group">
+                @foreach (var note in Model)
+                {
+                    <li class="list-group-item">
+                        <a asp-action="Details" asp-route-id="@note.Id">
+                            @note.CreatedAt.ToString("dd MMM yyyy HH:mm")
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-md-9">
+            <h3>Course Note (@currentNote.Difficulty)</h3>
+            <p><strong>Tutor:</strong> @currentNote.TutorId</p>
+            <p><strong>Student:</strong> @currentNote.StudentId</p>
+            <p><strong>Date:</strong> @currentNote.CreatedAt.ToString("f")</p>
+
+            <hr />
+
+            <h4>Notes</h4>
+            <pre class="bg-light p-3">@currentNote.Notes</pre>
+
+            <h4>Homework</h4>
+            <pre class="bg-light p-3">@currentNote.Homework</pre>
+        </div>
+    </div>
+</div>

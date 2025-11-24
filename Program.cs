@@ -1,4 +1,5 @@
 using Classly.Models;
+using Classly.Services;
 using Classly.Services.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<IBookingService, BookingService>();
+builder.Services.AddTransient<ICourseNotesService, CourseNotesService>();
 builder.Services.AddSingleton(TimeProvider.System);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

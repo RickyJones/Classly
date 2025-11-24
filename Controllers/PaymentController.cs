@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout;
+using System.Security.Claims;
 
 namespace Classly.Controllers
 {
@@ -117,6 +118,13 @@ namespace Classly.Controllers
             }
 
             ViewBag.Success = true;
+
+            var courseIds = JsonConvert.DeserializeObject<List<Guid>>(HttpContext.Session.GetString("BasketCourseIds") ?? "") ?? [];
+            var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            courseIds.ForEach(id => { 
+                _bookingService.CreateAsync(id, userId);
+            });
 
             return View("Status");
         }
