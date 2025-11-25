@@ -108,7 +108,7 @@ namespace Classly.Controllers
             var homeworkMessages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("As raw HTML, generate homework for each section with a mixed set of excercises (fill in the gaps & create your own sentences). Format so that excerises are grouped togther by type with about 10 items in each. So, 10 fill in the blanks, followed by 10 create your own sentences etc.  For difficulty:\n" + difficulty)
+                ChatMessage.CreateUserMessage("Generate homework for each section with a mixed set of excercises (fill in the gaps & create your own sentences). Format so that excerises are grouped together by type with about 10 items in each. So, 10 fill in the blanks, followed by 10 create your own sentences etc.  For difficulty:\n" + difficulty)
             };
 
             var homeworkResponse = await ChatGPTService.AskAIAsync(homeworkMessages);

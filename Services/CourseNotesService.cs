@@ -28,7 +28,7 @@ namespace Classly.Services
 
         public CourseNotesService()
         {
-            _connectionString = TestKeys.localDBCon;
+            _connectionString = TestKeys.currentCon;
         }
 
         // CREATE

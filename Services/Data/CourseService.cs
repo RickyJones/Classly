@@ -21,7 +21,7 @@ namespace Classly.Services.Data
 
         public CourseService()
         {
-            _connectionString = TestKeys.localDBCon;
+            _connectionString = TestKeys.currentCon;
         }
 
         public async Task<List<Course>> GetAllCoursesAsync()

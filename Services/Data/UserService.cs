@@ -18,7 +18,7 @@ namespace Classly.Services.Data
     {
         public User? GetUser(string email)
         {
-            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            using var connection = new MySqlConnection(TestKeys.currentCon);
             connection.Open();
 
             string query = "SELECT * FROM users WHERE email = @email";
@@ -50,7 +50,7 @@ namespace Classly.Services.Data
 
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password); 
 
-            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            using var connection = new MySqlConnection(TestKeys.currentCon);
             await connection.OpenAsync(cancellationToken);
 
             string query = "INSERT INTO users (id, name, email, password, isTutor) VALUES (@id, @name, @email, @password, @isTutor)";
@@ -77,7 +77,7 @@ namespace Classly.Services.Data
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            using var connection = new MySqlConnection(TestKeys.currentCon);
             await connection.OpenAsync(cancellationToken);
 
             string query = "DELETE FROM users WHERE email = @Email";
@@ -99,7 +99,7 @@ namespace Classly.Services.Data
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            using var connection = new MySqlConnection(TestKeys.currentCon);
             await connection.OpenAsync(cancellationToken);
 
             string query = "SELECT id, name, email, password FROM users WHERE LOWER(email) = LOWER(@NormalizedEmail)";
@@ -126,7 +126,7 @@ namespace Classly.Services.Data
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            using var connection = new MySqlConnection(TestKeys.currentCon);
             await connection.OpenAsync(cancellationToken);
 
             string query = "UPDATE users SET name = @Name, email = @Email, password = @Password WHERE id = @Id";
@@ -148,7 +148,7 @@ namespace Classly.Services.Data
 
         public async Task<User?> GetUser(Guid id)
         {
-            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            using var connection = new MySqlConnection(TestKeys.currentCon);
             connection.Open();
 
             string query = "SELECT * FROM users WHERE id = @id";
@@ -177,7 +177,7 @@ namespace Classly.Services.Data
         {
             var students = new List<User>();
 
-            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            using var connection = new MySqlConnection(TestKeys.currentCon);
             await connection.OpenAsync();
 
             string query = "SELECT * FROM users WHERE isTutor = @isTutor";
@@ -213,7 +213,7 @@ namespace Classly.Services.Data
         {
             var students = new List<User>();
 
-            using var connection = new MySqlConnection(TestKeys.localDBCon);
+            using var connection = new MySqlConnection(TestKeys.currentCon);
             await connection.OpenAsync();
 
             string query = "SELECT * FROM users WHERE isTutor = @isTutor";

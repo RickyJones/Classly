@@ -22,7 +22,7 @@ namespace Classly.Services.Data
 
         public BookingService(IUserService userService, ICourseService courseService)
         {
-            _connectionString = TestKeys.localDBCon;
+            _connectionString = TestKeys.currentCon;
             _userService = userService;
             _courseService = courseService;
         }
