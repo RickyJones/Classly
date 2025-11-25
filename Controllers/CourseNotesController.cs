@@ -89,18 +89,26 @@ namespace Classly.Controllers
             var messages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("As a raw HTML table, organise these notes into sections (vocab, phrases, idioms, grammer, etc) each along with definition and example:\n" + notesContent)
+                ChatMessage.CreateUserMessage("As a raw HTML table, organise these notes into sections (vocab, phrases, idioms, grammer, etc) each along with definition and example. Output the HTML table inside <html_output>...</html_output> tags.:\n" + notesContent)
 
             };
 
             var tablesResponse = await ChatGPTService.AskAIAsync(messages);
+
+            //string response = /* AI response */;
+
+            // Extract between <html_output> and </html_output>
+            int start = tablesResponse.IndexOf("<html_output>") + "<html_output>".Length;
+            int end = tablesResponse.IndexOf("</html_output>");
+            string htmlTable = tablesResponse.Substring(start, end - start);
+
 
             //generate mixed homework
 
             var homeworkMessages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("As raw HTML, generate homework for each section with a mixed set of excercises (fill in the gaps & create your own sentences) For difficulty:\n" + difficulty)
+                ChatMessage.CreateUserMessage("As raw HTML, generate homework for each section with a mixed set of excercises (fill in the gaps & create your own sentences). Format so that excerises are grouped togther by type with about 10 items in each. So, 10 fill in the blanks, followed by 10 create your own sentences etc.  For difficulty:\n" + difficulty)
             };
 
             var homeworkResponse = await ChatGPTService.AskAIAsync(homeworkMessages);
