@@ -89,18 +89,16 @@ namespace Classly.Controllers
             var messages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("As a raw HTML table, organise these notes into sections (vocab, phrases, idioms, grammer, etc) each along with definition and example. Output the HTML table inside <html_output>...</html_output> tags.:\n" + notesContent)
+                ChatMessage.CreateUserMessage("organise these notes into a tables (not lists) with (vocab, phrases, idioms, grammer, etc) each along with definition and example. It needs so be raw html along with any css being inline for some limited styling. I do not need any additonal html elements such as doctype, meta or title:\n" + notesContent)
 
             };
 
             var tablesResponse = await ChatGPTService.AskAIAsync(messages);
 
+            tablesResponse = tablesResponse.Contains("```html") ? tablesResponse.Replace("```html", "") : tablesResponse;
+
             //string response = /* AI response */;
 
-            // Extract between <html_output> and </html_output>
-            int start = tablesResponse.IndexOf("<html_output>") + "<html_output>".Length;
-            int end = tablesResponse.IndexOf("</html_output>");
-            string htmlTable = tablesResponse.Substring(start, end - start);
 
 
             //generate mixed homework
@@ -112,10 +110,11 @@ namespace Classly.Controllers
             var homeworkMessages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("Generate homework for each section with a mixed set of excercises (fill in the gaps & create your own sentences). Format so that excerises are grouped together by type with about 10 items in each. So, 10 fill in the blanks, followed by 10 create your own sentences etc.  For difficulty:\n" + difficulty)
+                ChatMessage.CreateUserMessage("Generate homework for each section with a mixed set of excercises (fill in the gaps & create your own sentences). It needs to be in raw html with in-line css. Again, no need to meta tags or any additional elements. Create 10 items for each type, and order them grouped by type. Create them for difficulty:\n" + difficulty)
             };
 
             var homeworkResponse = await ChatGPTService.AskAIAsync(homeworkMessages);
+            homeworkResponse = homeworkResponse.Contains("```html") ? homeworkResponse.Replace("```html", "") : homeworkResponse;
 
             // Example: store AI output as JSON
             var structured = new
