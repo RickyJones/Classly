@@ -105,6 +105,10 @@ namespace Classly.Controllers
 
             //generate mixed homework
 
+            var specifyHomeworkType = "fill in balnks";
+            var askAIForHomework = "";
+
+
             var homeworkMessages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),

@@ -11,7 +11,7 @@ namespace Classly.Services.Data
         public Task<User?> GetUser(Guid id);
         public Task<User> CreateAsync(User user, CancellationToken cancellationToken);
         public bool ValidatePassword(string inputPassword, string storedHash);
-        public Task<List<User>> GetStudentsAsync();
+        public Task<List<User>> GetStudentsAsync(Guid? tutorId = null);
         public Task<List<User>> GetTutorsAsync();
     }
     public class UserService : IUserService
@@ -53,13 +53,14 @@ namespace Classly.Services.Data
             using var connection = new MySqlConnection(TestKeys.currentCon);
             await connection.OpenAsync(cancellationToken);
 
-            string query = "INSERT INTO users (id, name, email, password, isTutor) VALUES (@id, @name, @email, @password, @isTutor)";
+            string query = "INSERT INTO users (id, name, email, password, isTutor, mytutorId) VALUES (@id, @name, @email, @password, @isTutor, @mytutorId)";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@id", user.Id);
             command.Parameters.AddWithValue("@name", user.Name); // Use actual username
             command.Parameters.AddWithValue("@email", user.Email);
             command.Parameters.AddWithValue("@password", hashedPassword);
             command.Parameters.AddWithValue("@isTutor", user.IsTutor);
+            command.Parameters.AddWithValue("@myTutorId", user.MyTutorId);
 
             int rowsAffected = await command.ExecuteNonQueryAsync(cancellationToken);
 
@@ -173,7 +174,7 @@ namespace Classly.Services.Data
             return null;
         }
 
-        public async Task<List<User>> GetStudentsAsync()
+        public async Task<List<User>> GetStudentsAsync(Guid? tutorId = null)
         {
             var students = new List<User>();
 
@@ -181,8 +182,16 @@ namespace Classly.Services.Data
             await connection.OpenAsync();
 
             string query = "SELECT * FROM users WHERE isTutor = @isTutor";
+            if(tutorId != null)
+            {
+                query += " AND myTutorId = @tutorId";
+            }
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@isTutor", false);
+            if(tutorId != null)
+            {
+                command.Parameters.AddWithValue("@tutorId", tutorId);
+            }
 
             using var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
@@ -193,7 +202,8 @@ namespace Classly.Services.Data
                     Name = reader["name"]?.ToString() ?? string.Empty,
                     Email = reader["email"]?.ToString() ?? string.Empty,
                     Password = reader["password"]?.ToString(),
-                    IsTutor = false
+                    IsTutor = false,
+                    MyTutorId = tutorId
                 };
 
                 Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}");

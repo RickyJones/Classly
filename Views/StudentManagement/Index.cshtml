@@ -1,0 +1,78 @@
+﻿@using Classly.Services.Data
+@using System.Security.Claims
+@inject IUserService userService;
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>
+    .copy-box {
+        background-color: #fff; /* white background */
+        border: 1px solid #dee2e6; /* light gray border */
+        border-radius: 0.5rem; /* rounded corners */
+        padding: 0.75rem 1rem; /* breathing room */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* subtle drop shadow */
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .copy-box:hover {
+            transform: translateY(-2px); /* lift on hover */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+</style>
+
+@{
+    Guid? tutorId = Guid.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var validId) ? validId : null;
+}
+<h2>Your Students</h2>
+<div class="row">
+    <div class="col">
+        <ul>
+            @foreach (var student in await userService.GetStudentsAsync(tutorId)){
+                <li>@student.Name</li>
+            }
+        </ul>
+    </div>
+    <div class="col">
+        <h3>Looking to invite new students?</h3>
+        <p>Copy this link to send them an invite to create a Classly account that will connect you and your new student</p>
+        @{
+            var registerUrl = Url.Action("Register", "Login", new { linkingTutorId = tutorId }, ViewContext.HttpContext.Request.Scheme);
+        }
+
+        <div class="copy-box d-flex align-items-center">
+            <p class="mb-0 me-2" id="registerUrl">@registerUrl</p>
+            <button class="btn btn-outline-secondary btn-sm" onclick="copyToClipboard()" title="Copy link">
+                <i class="bi bi-clipboard"></i>
+            </button>
+        </div>
+
+
+        <!-- Toast notification -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="copyToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        Link copied to clipboard!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+        @section Scripts {
+            <script>
+                function copyToClipboard() {
+                    const text = document.getElementById("registerUrl").innerText;
+                    navigator.clipboard.writeText(text).then(() => {
+                        const toastEl = document.getElementById('copyToast');
+                        const toast = new bootstrap.Toast(toastEl);
+                        toast.show();
+                    });
+                }
+            </script>
+        }
+
+
+
+    </div>
+</div>

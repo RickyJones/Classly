@@ -29,6 +29,7 @@
             <p><strong>Tutor:</strong> @currentNote.TutorId</p>
             <p><strong>Student:</strong> @currentNote.StudentId</p>
             <p><strong>Date:</strong> @currentNote.CreatedAt.ToString("f")</p>
+            <button onclick="@Url.Action("ViewNote", new {currentNoteId = currentNote.Id})">View</button>
 
             <hr />
 

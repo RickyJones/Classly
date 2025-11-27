@@ -84,6 +84,7 @@ else {
                     <h3 class="timeline-title">@note.Difficulty</h3>
                     <p class="timeline-date">@note.CreatedAt</p>
                     <p>Teacher: @teacher?.Name</p>
+                    <button onclick="location.href='@Url.Action("ViewNote", new { noteId = note.Id })'">View</button>
                 </div>
             </div>
     }

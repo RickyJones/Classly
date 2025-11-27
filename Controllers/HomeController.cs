@@ -28,8 +28,18 @@ namespace Classly.Controllers
         public async Task<IActionResult> Index()
         {
             if (!HttpContext.User.Identity.IsAuthenticated) {
+             
                 return RedirectToAction("Landing");
             }
+            if (User.Claims.Any(x => x.Type == "IsTutor"))
+            {
+                return RedirectToAction("TutorIndex");
+            }
+            return View();
+        }
+
+        public IActionResult TutorIndex()
+        {
             return View();
         }
 

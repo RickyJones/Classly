@@ -14,15 +14,12 @@
     <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus="">
     <label for="inputPassword" class="sr-only">Password</label>
     <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
     <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" value="remember-me"> Remember me
-        </label>
-    </div>
-    <div class="checkbox mb-3">
-        <label>
-            <input name="isTutor" type="checkbox" value="true"> Sign up as Tutor
-        </label>
+        
+            <input name="isTutor" type="hidden" value="@(ViewBag.IsTutor ?? false)">
+        <input name="MyTutorId" type="hidden" value="@(ViewBag.TutorId ?? false)">
+
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     <p class="mt-5 mb-3 text-muted">© 2017-2018</p>

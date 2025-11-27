@@ -40,7 +40,7 @@ namespace Classly.Services
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = @"INSERT INTO CourseNotes 
+            string sql = @"INSERT INTO courseNotes 
                        (Id, TutorId, StudentId, Difficulty, Notes, Homework, CreatedAt)
                        VALUES (@Id, @TutorId, @StudentId, @Difficulty, @Notes, @Homework, @CreatedAt)";
 
@@ -62,7 +62,7 @@ namespace Classly.Services
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = "SELECT * FROM CourseNotes WHERE Id = @Id";
+            string sql = "SELECT * FROM courseNotes WHERE Id = @Id";
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@Id", id.ToString());
 
@@ -89,7 +89,7 @@ namespace Classly.Services
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = @"UPDATE CourseNotes 
+            string sql = @"UPDATE courseNotes 
                        SET TutorId=@TutorId, StudentId=@StudentId, Difficulty=@Difficulty, 
                            Notes=@Notes, Homework=@Homework 
                        WHERE Id=@Id";
@@ -112,7 +112,7 @@ namespace Classly.Services
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = "DELETE FROM CourseNotes WHERE Id=@Id";
+            string sql = "DELETE FROM courseNotes WHERE Id=@Id";
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@Id", id.ToString());
 
@@ -127,7 +127,7 @@ namespace Classly.Services
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = "SELECT * FROM CourseNotes WHERE studentId = @studentId";
+            string sql = "SELECT * FROM courseNotes WHERE studentId = @studentId";
             using var cmd = new MySqlCommand(sql, conn);
 
             // Pass as string if stored as CHAR(36)

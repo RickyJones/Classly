@@ -19,7 +19,16 @@ namespace Classly.Controllers
             _userService = userService;
         }
 
-        public IActionResult Register() { return View(); }
+        public IActionResult RegisterTutor() {
+
+            ViewBag.IsTutor = true;
+            return View();
+        }
+
+        public IActionResult Register(Guid? linkingTutorId) {
+            ViewBag.TutorId = linkingTutorId;
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Register(User user)
         {
@@ -43,6 +52,7 @@ namespace Classly.Controllers
             if (user == null || !_userService.ValidatePassword(login.Password, user.Password))
             {
                 ModelState.AddModelError("", "Invalid login attempt.");
+                ViewBag.Error = "Invalid login attempt";
                 return View();
             }
 
