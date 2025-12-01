@@ -5,15 +5,66 @@
     
 }
 
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        margin: 1em 0;
+    }
+
+    th {
+        background-color: #ff8800; /* orange header */
+        color: white;
+        text-align: left;
+        padding: 10px;
+    }
+
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9; /* subtle zebra striping */
+    }
+
+    tr:hover {
+        background-color: #f1f1f1; /* highlight row on hover */
+    }
+
+</style>
+
 <h1>Notes</h1>
 
-<label>Teacher: @ViewBag.Teacher</label>
+<label>Teacher: @ViewBag.Teacher</label><br/>
 <label>Student: @ViewBag.Student</label>
 
-<h3>Content</h3>
-<label>Difficulty: @Model.Difficulty</label>
-@Html.Raw(Model.Notes)
+<div class="row">
+    <div class="col">
+        <h3>Content</h3>
+        <label><b>Difficulty: @Model.Difficulty</b></label>
+        @Html.Raw(Model.Notes)
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h3 class="card-title">Homework</h3>
+                @Html.Raw(Model.Homework.Replace("\n", "<br/>"))
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h3 class="card-title">Next lesson plan</h3>
+                @Html.Raw(Model.NextLessonPlan.Replace("\n", "<br/>"))
+            </div>
+        </div>
+    </div>
+</div>
 
-<h3>Homework</h3>
-@Html.Raw(Model.Homework)
+
 

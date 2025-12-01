@@ -89,45 +89,63 @@ namespace Classly.Controllers
             var messages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("organise these notes into a tables (not lists) with (vocab, phrases, idioms, grammer, etc) each along with definition and example. It needs so be raw html along with any css being inline for some limited styling. I do not need any additonal html elements such as doctype, meta or title:\n" + notesContent)
+                ChatMessage.CreateUserMessage("from the vocabulary covered in the following notes, create a raw HTML table with no styling with the fields vocabulary, definition and example. Ensure you populate very cell as appropriate :\n" + notesContent +". Wrap the HTML I need with <content></content>")
 
             };
 
             var tablesResponse = await ChatGPTService.AskAIAsync(messages);
 
-            tablesResponse = tablesResponse.Contains("```html") ? tablesResponse.Replace("```html", "") : tablesResponse;
+            string startTag = "<content>";
+            string endTag = "</content>";
 
-            //string response = /* AI response */;
+            int startIndex = tablesResponse.IndexOf(startTag) + startTag.Length;
+            int endIndex = tablesResponse.IndexOf(endTag);
 
-
+            tablesResponse = tablesResponse.Substring(startIndex, endIndex - startIndex);
 
             //generate mixed homework
 
-            var specifyHomeworkType = "fill in balnks";
+            var specifyHomeworkType = string.Join(",", model.HomeworkTypes);// "fill in the blanks, Multiple choice, Sentence matching / Half-sentence matching, create your own sentences ";
             var askAIForHomework = "";
+            bool createNextLessonPlan = model.GenerateLessonPlan;
 
 
             var homeworkMessages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("Generate homework for each section with a mixed set of excercises (fill in the gaps & create your own sentences). It needs to be in raw html with in-line css. Again, no need to meta tags or any additional elements. Create 10 items for each type, and order them grouped by type. Create them for difficulty:\n" + difficulty)
+                ChatMessage.CreateUserMessage($"With no preamble or other explanations, Generate homework to focus on the vocabulary covered. Group the homework into question type(s) ({specifyHomeworkType}). Produce 10 questions for each question type at difficulty:" + difficulty)
             };
 
             var homeworkResponse = await ChatGPTService.AskAIAsync(homeworkMessages);
-            homeworkResponse = homeworkResponse.Contains("```html") ? homeworkResponse.Replace("```html", "") : homeworkResponse;
+
+
+            string lessonPlanResponse = string.Empty;
+            if (createNextLessonPlan)
+            {
+                var lessonPlan = new List<ChatMessage>
+                {
+                     ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
+                     ChatMessage.CreateUserMessage($"Genrate a lesson plan to further develop the vocabulary covered. No preamble or explanation.")
+                };
+
+                lessonPlanResponse = await ChatGPTService.AskAIAsync(lessonPlan);
+            }
+            
+
 
             // Example: store AI output as JSON
             var structured = new
             {
                 Notes = tablesResponse,
                 Homework = homeworkResponse,
+                LessonPlan = createNextLessonPlan,
                 model.Difficulty,
                 Timestamp = DateTime.UtcNow
             };
 
             string json = JsonSerializer.Serialize(structured, new JsonSerializerOptions { WriteIndented = true });
 
-            await _courseNotesService.CreateCourseNoteAsync(new Models.Courses.CourseNote
+            var createdNote = await _courseNotesService.CreateCourseNoteAsync(new Models.Courses.CourseNote
             {
                 CreatedAt = DateTime.UtcNow,
                 Difficulty = difficulty,
@@ -135,11 +153,14 @@ namespace Classly.Controllers
                 Notes = tablesResponse,
                 TutorId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 StudentId = model.StudentId,
+                NextLessonPlan = lessonPlanResponse
             });
             //await System.IO.File.WriteAllTextAsync("StudyNotes.json", json);
 
+
+            return new RedirectToActionResult("ViewNote", "CourseNotes", new { noteId = createdNote.Id });
             // Pass AI output to a view
-            return View("ViewAIGen", new AINotesResponse{ tablesResponse = tablesResponse, tasks = homeworkResponse });
+            //return View("ViewAIGen", new AINotesResponse{ tablesResponse = tablesResponse, tasks = homeworkResponse });
         }
     }
 }

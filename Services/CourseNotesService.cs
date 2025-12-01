@@ -7,7 +7,7 @@ namespace Classly.Services
     public interface ICourseNotesService
     {
         // CREATE
-        Task CreateCourseNoteAsync(CourseNote note);
+        Task<CourseNote> CreateCourseNoteAsync(CourseNote note);
 
         // READ (by Id)
         Task<CourseNote?> GetCourseNoteAsync(Guid id);
@@ -32,7 +32,7 @@ namespace Classly.Services
         }
 
         // CREATE
-        public async Task CreateCourseNoteAsync(CourseNote note)
+        public async Task<CourseNote> CreateCourseNoteAsync(CourseNote note)
         {
             note.Id = Guid.NewGuid();
             note.CreatedAt = DateTime.UtcNow;
@@ -41,8 +41,8 @@ namespace Classly.Services
             await conn.OpenAsync();
 
             string sql = @"INSERT INTO courseNotes 
-                       (Id, TutorId, StudentId, Difficulty, Notes, Homework, CreatedAt)
-                       VALUES (@Id, @TutorId, @StudentId, @Difficulty, @Notes, @Homework, @CreatedAt)";
+                       (Id, TutorId, StudentId, Difficulty, Notes, Homework, NextLessonPlan, CreatedAt)
+                       VALUES (@Id, @TutorId, @StudentId, @Difficulty, @Notes, @Homework, @NextLessonPlan, @CreatedAt)";
 
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@Id", note.Id.ToString());
@@ -51,9 +51,12 @@ namespace Classly.Services
             cmd.Parameters.AddWithValue("@Difficulty", note.Difficulty);
             cmd.Parameters.AddWithValue("@Notes", note.Notes);
             cmd.Parameters.AddWithValue("@Homework", note.Homework);
+            cmd.Parameters.AddWithValue("@NextLessonPlan", note.NextLessonPlan);
             cmd.Parameters.AddWithValue("@CreatedAt", note.CreatedAt);
 
             await cmd.ExecuteNonQueryAsync();
+
+            return note;
         }
 
         // READ (by Id)
@@ -77,7 +80,8 @@ namespace Classly.Services
                     Difficulty = reader.GetString("Difficulty"),
                     Notes = reader.GetString("Notes"),
                     Homework = reader.GetString("Homework"),
-                    CreatedAt = reader.GetDateTime("CreatedAt")
+                    CreatedAt = reader.GetDateTime("CreatedAt"),
+                    NextLessonPlan = reader.GetString("NextLessonPlan")
                 };
             }
             return null;
@@ -91,7 +95,7 @@ namespace Classly.Services
 
             string sql = @"UPDATE courseNotes 
                        SET TutorId=@TutorId, StudentId=@StudentId, Difficulty=@Difficulty, 
-                           Notes=@Notes, Homework=@Homework 
+                           Notes=@Notes, Homework=@Homework, NextLessonPlan = @NextLessonPlan
                        WHERE Id=@Id";
 
             using var cmd = new MySqlCommand(sql, conn);
@@ -101,6 +105,7 @@ namespace Classly.Services
             cmd.Parameters.AddWithValue("@Difficulty", note.Difficulty);
             cmd.Parameters.AddWithValue("@Notes", note.Notes);
             cmd.Parameters.AddWithValue("@Homework", note.Homework);
+            cmd.Parameters.AddWithValue("@NextLessonPlan", note.NextLessonPlan);
 
             int rows = await cmd.ExecuteNonQueryAsync();
             return rows > 0;
@@ -144,7 +149,8 @@ namespace Classly.Services
                     Difficulty = reader.GetString("Difficulty"),
                     Notes = reader.GetString("Notes"),
                     Homework = reader.GetString("Homework"),
-                    CreatedAt = reader.GetDateTime("CreatedAt")
+                    CreatedAt = reader.GetDateTime("CreatedAt"),
+                    NextLessonPlan = reader.GetString("NextLessonPlan")
                 });
             }
 

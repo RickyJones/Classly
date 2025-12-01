@@ -19,11 +19,11 @@
         <label for="FileUpload">Or Upload a File</label>
         <input type="file" id="FileUpload" name="FileUpload" class="form-control" />
     </div>
-
+    <br/>
     <div class="form-group">
         <label for="Difficulty">Difficulty Level</label>
         <select id="Difficulty" name="Difficulty" class="form-control">
-            <option value="">-- Select Level --</option>
+            <option value="">Please select</option>
             <option value="A1">A1 (Beginner)</option>
             <option value="A2">A2 (Elementary)</option>
             <option value="B1">B1 (Intermediate)</option>
@@ -32,9 +32,40 @@
             <option value="C2">C2 (Proficient)</option>
         </select>
     </div>
-    <h3>Specify homework format</h3>
-    <input type="checkbox"/><label>Fill in the blanks</label>
-    <input type="checkbox" /><label>Whatever</label>
+    <br/>
+    <div class="form-group">
+        <label for="HomeworkType" class="form-label">Homework tasks</label>
+
+        <div class="checkbox-group">
+            <label>
+                <input type="checkbox" name="HomeworkTypes" value="fill in the blanks" />
+                Fill in the blanks
+            </label>
+            <br/>
+            <label>
+                <input type="checkbox" name="HomeworkTypes" value="multiple choice" />
+                Multiple choice
+            </label>
+            <br/>
+            <label>
+                <input type="checkbox" name="HomeworkTypes" value="sentence matching" />
+                Sentence matching
+            </label>
+            <br/>
+            <label>
+                <input type="checkbox" name="HomeworkTypes" value="create your own sentences" />
+                Create your own sentences
+            </label>
+        </div>
+    </div>
+    <br/>
+    
+    <label>Generate a plan for next lesson?</label>
+    <select id="LessonPlan" name="GenerateLessonPlan" class="form-control">
+        <option value="">Please select</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+    </select>
     <br/>
     <button type="submit" class="btn btn-primary">Send to Server</button>
 </form>
