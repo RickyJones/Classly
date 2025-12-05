@@ -8,6 +8,8 @@
         public Guid StudentId { get; set; }
         public bool GenerateLessonPlan { get; set; }
         public string[] HomeworkTypes { get; set; } = [];
+        public int LessonDuration { get; set; }
+        public string topicOfNextLesson { get; set; }
 
     }
 

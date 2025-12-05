@@ -89,7 +89,7 @@ namespace Classly.Controllers
             var messages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("from the vocabulary covered in the following notes, create a raw HTML table with no styling with the fields vocabulary, definition and example. Ensure you populate very cell as appropriate :\n" + notesContent +". Wrap the HTML I need with <content></content>")
+                ChatMessage.CreateUserMessage("No preamble or explanation don't allow more than 2 sequential <br/> if you use them. From the vocabulary covered in the following notes, create a raw HTML table with no styling with the fields vocabulary, definition and example. Ensure you populate very cell as appropriate :\n" + notesContent +". Wrap the HTML I need with <content></content>")
 
             };
 
@@ -108,12 +108,15 @@ namespace Classly.Controllers
             var specifyHomeworkType = string.Join(",", model.HomeworkTypes);// "fill in the blanks, Multiple choice, Sentence matching / Half-sentence matching, create your own sentences ";
             var askAIForHomework = "";
             bool createNextLessonPlan = model.GenerateLessonPlan;
+            string topicOfNextLesson = model.topicOfNextLesson;
+
+            int classDurationMins = model.LessonDuration;
 
 
             var homeworkMessages = new List<ChatMessage>
             {
                 ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage($"With no preamble or other explanations, Generate homework to focus on the vocabulary covered. Group the homework into question type(s) ({specifyHomeworkType}). Produce 10 questions for each question type at difficulty:" + difficulty)
+                ChatMessage.CreateUserMessage($"With no preamble or other explanations don't allow more than 2 sequential <br/> if you use them. Generate homework to focus on the vocabulary covered. Group the homework into question type(s) ({specifyHomeworkType}). Produce 10 questions for each question type at difficulty:" + difficulty)
             };
 
             var homeworkResponse = await ChatGPTService.AskAIAsync(homeworkMessages);
@@ -125,7 +128,21 @@ namespace Classly.Controllers
                 var lessonPlan = new List<ChatMessage>
                 {
                      ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                     ChatMessage.CreateUserMessage($"Genrate a lesson plan to further develop the vocabulary covered. No preamble or explanation.")
+                     ChatMessage.CreateUserMessage(@$"Genrate an online 1-1 ESL lesson plan using the exact structure that follows.
+No preamble or explanation, don't allow more than 2 sequential <br/> if you use them.
+The student level is {difficulty} and the class length will be {classDurationMins} mins.
+The topic will be {topicOfNextLesson}. All vocabulary, idioms, and phrasal verbs must include simle definitions and clear example sentences, adapted to student level.
+
+Always use these 7 sections in exact order:
+Warm-up & Lead-in: short questions about topic (pictures optional).
+Vocabulary Presentation: introduce level appropriate vocab words (at least 3) with simple definitions, one example sentence each, optional images.
+Which word: Questions - teacher gives clues; student says the correct vocabulary word.
+Idioms and practice: include 1-3 idioms with simple definitions and examples; include guided practice.
+Phrasal verbs and practice: include 2-4 phrasal verbs  with simple definitions, examples and guided practice.
+Review and cooldown: light recap conversation using covered vocabulary, idioms and phrasal verbs.
+Review game - teacher says definition; student says vocabulary word, idiom or phrasal verb. Give a few examples for this
+
+Keep the lesson plan clear, simple and practical for online teaching. Do not include homework")
                 };
 
                 lessonPlanResponse = await ChatGPTService.AskAIAsync(lessonPlan);
