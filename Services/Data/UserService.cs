@@ -13,12 +13,21 @@ namespace Classly.Services.Data
         public bool ValidatePassword(string inputPassword, string storedHash);
         public Task<List<User>> GetStudentsAsync(Guid? tutorId = null);
         public Task<List<User>> GetTutorsAsync();
+        public Task<bool> UpdateAsync(User user, CancellationToken cancellationToken);
+
+
+
     }
     public class UserService : IUserService
     {
+        private readonly string _connectionString;
+        public UserService(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
         public User? GetUser(string email)
         {
-            using var connection = new MySqlConnection(TestKeys.currentCon);
+            using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
             string query = "SELECT * FROM users WHERE email = @email";
@@ -50,7 +59,7 @@ namespace Classly.Services.Data
 
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password); 
 
-            using var connection = new MySqlConnection(TestKeys.currentCon);
+            using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync(cancellationToken);
 
             string query = "INSERT INTO users (id, name, email, password, isTutor, mytutorId) VALUES (@id, @name, @email, @password, @isTutor, @mytutorId)";
@@ -78,7 +87,7 @@ namespace Classly.Services.Data
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using var connection = new MySqlConnection(TestKeys.currentCon);
+            using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync(cancellationToken);
 
             string query = "DELETE FROM users WHERE email = @Email";
@@ -100,7 +109,7 @@ namespace Classly.Services.Data
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using var connection = new MySqlConnection(TestKeys.currentCon);
+            using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync(cancellationToken);
 
             string query = "SELECT id, name, email, password FROM users WHERE LOWER(email) = LOWER(@NormalizedEmail)";
@@ -127,7 +136,7 @@ namespace Classly.Services.Data
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using var connection = new MySqlConnection(TestKeys.currentCon);
+            using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync(cancellationToken);
 
             string query = "UPDATE users SET name = @Name, email = @Email, password = @Password WHERE id = @Id";
@@ -149,7 +158,7 @@ namespace Classly.Services.Data
 
         public async Task<User?> GetUser(Guid id)
         {
-            using var connection = new MySqlConnection(TestKeys.currentCon);
+            using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
             string query = "SELECT * FROM users WHERE id = @id";
@@ -178,7 +187,7 @@ namespace Classly.Services.Data
         {
             var students = new List<User>();
 
-            using var connection = new MySqlConnection(TestKeys.currentCon);
+            using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
             string query = "SELECT * FROM users WHERE isTutor = @isTutor";
@@ -223,7 +232,7 @@ namespace Classly.Services.Data
         {
             var students = new List<User>();
 
-            using var connection = new MySqlConnection(TestKeys.currentCon);
+            using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
             string query = "SELECT * FROM users WHERE isTutor = @isTutor";
@@ -253,5 +262,6 @@ namespace Classly.Services.Data
 
             return students;
         }
+
     }
 }

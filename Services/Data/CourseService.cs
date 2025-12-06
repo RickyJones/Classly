@@ -19,9 +19,9 @@ namespace Classly.Services.Data
     {
         private readonly string _connectionString;
 
-        public CourseService()
+        public CourseService(IConfiguration configuration)
         {
-            _connectionString = TestKeys.currentCon;
+            _connectionString = configuration.GetConnectionString("DefaultConnection");//TestKeys.currentCon;
         }
 
         public async Task<List<Course>> GetAllCoursesAsync()

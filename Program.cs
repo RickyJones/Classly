@@ -1,5 +1,7 @@
 using Classly.Models;
+using Classly.Models.Config;
 using Classly.Services;
+using Classly.Services.AI;
 using Classly.Services.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +16,14 @@ builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<IBookingService, BookingService>();
 builder.Services.AddTransient<ICourseNotesService, CourseNotesService>();
 builder.Services.AddSingleton(TimeProvider.System);
+
+builder.Services.Configure<SiteSettings>(
+    builder.Configuration.GetSection("SiteSettings"));
+var connString = builder.Configuration.GetConnectionString("ClasslyDB");
+Console.WriteLine(connString);
+
+ChatGPTService.Init(builder.Configuration["SiteSettings:AIKey"]);
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

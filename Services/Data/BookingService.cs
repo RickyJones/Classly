@@ -20,9 +20,9 @@ namespace Classly.Services.Data
         private readonly IUserService _userService;
         private readonly ICourseService _courseService;
 
-        public BookingService(IUserService userService, ICourseService courseService)
+        public BookingService(IUserService userService, ICourseService courseService, IConfiguration configuration)
         {
-            _connectionString = TestKeys.currentCon;
+            _connectionString = configuration.GetConnectionString("DefaultConnection");//TestKeys.currentCon;
             _userService = userService;
             _courseService = courseService;
         }

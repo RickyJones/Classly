@@ -3,8 +3,10 @@ using Classly.Models.Login;
 using Classly.Services.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -12,20 +14,22 @@ namespace Classly.Controllers
 {
     public class LoginController : Controller
     {
-        private IUserService _userService {  get; set; }
+        private IUserService _userService { get; set; }
 
         public LoginController(IUserService userService)
         {
             _userService = userService;
         }
 
-        public IActionResult RegisterTutor() {
+        public IActionResult RegisterTutor()
+        {
 
             ViewBag.IsTutor = true;
             return View();
         }
 
-        public IActionResult Register(Guid? linkingTutorId) {
+        public IActionResult Register(Guid? linkingTutorId)
+        {
             ViewBag.TutorId = linkingTutorId;
             return View();
         }
@@ -37,6 +41,8 @@ namespace Classly.Controllers
             var registered = await _userService.CreateAsync(user, cancellationToken);
             if (registered != null) return RedirectToAction("Login");
 
+
+            ViewBag.Error = "Unable to register user";
             //error
             return View();
         }
@@ -86,18 +92,138 @@ namespace Classly.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Login");
         }
-        public IActionResult ForgotPassword() { 
-            return View();
-        }
-        [HttpPost]
-        public IActionResult ForgotPassword(string emailAddress)
+        [Authorize]
+        public IActionResult ForgotPassword()
         {
+            var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var allowedEmails = new[] { "daniel-einon@live.co.uk", "rickyjones28@gmail.com" };
+
+            if (!allowedEmails.Contains(email))
+            {
+                return Forbid();
+            }
             return View();
         }
-        public IActionResult ForgotPasswordConfirmation(Guid changeRequestId) {
+
+        [Authorize]
+        public IActionResult UpdatePassword(Guid code)
+        {
+
+            if(!TempCodeStore.ContainsValue(code))
+            {
+                return Forbid();
+            }
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(User user)
+        {
+
+            var emailIn = user.Email;
+
+            var userIn = _userService.GetUser(emailIn);
+
+            if (userIn == null)
+            {
+                ViewBag.Error = "Unable to process request";
+            }
+
+            userIn.Password = user.Password;
+
+            var updated = await _userService.UpdateAsync(userIn, new CancellationToken());
+
+            if (!updated)
+            {
+                ViewBag.Error = "unable to update";
+
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(User user)
+        {
+            var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var allowedEmails = new[] { "daniel-einon@live.co.uk", "rickyjones28@gmail.com" };
+
+            if (!allowedEmails.Contains(email))
+            {
+                return Forbid();
+            }
+
+            var emailIn = user.Email;
+
+            var userIn = _userService.GetUser(emailIn);
+
+            if (userIn == null)
+            {
+                ViewBag.Error = "Unable to process request";
+
+                return View();
+            }
+
+            var tempCode = TempCodeStore.Generate(userIn.Email);
+            ViewBag.TempCode = tempCode;
+            ViewBag.Success = true;
+
+            return View();
+        }
+        public IActionResult ForgotPasswordConfirmation(Guid changeRequestId)
+        {
 
             //
             return View();
         }
     }
+
+public static class TempCodeStore
+    {
+        private static readonly ConcurrentDictionary<string, (Guid Code, DateTime Expiry)> _codes
+            = new();
+
+        public static Guid Generate(string key)
+        {
+            var code = Guid.NewGuid();
+            _codes[key] = (code, DateTime.UtcNow.AddMinutes(10));
+            return code;
+        }
+
+        public static Guid? Get(string key)
+        {
+            if (_codes.TryGetValue(key, out var entry))
+            {
+                if (DateTime.UtcNow <= entry.Expiry)
+                    return entry.Code;
+
+                _codes.TryRemove(key, out _); // expired
+            }
+            return null;
+        }
+
+        public static bool ContainsValue(Guid code)
+        {
+            foreach (var kvp in _codes)
+            {
+                var (storedCode, expiry) = kvp.Value;
+                if (storedCode == code)
+                {
+                    if (DateTime.UtcNow <= expiry)
+                        return true;
+
+                    _codes.TryRemove(kvp.Key, out _); // expired
+                }
+            }
+            return false;
+        }
+    }
+
 }

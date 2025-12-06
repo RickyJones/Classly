@@ -1,10 +1,12 @@
 ﻿using Classly.Dummy.Datasets;
 using Classly.Services.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Classly.Controllers
 {
+    [Authorize]
     public class MarketplaceController : Controller
     {
         private readonly ICourseService _courseService;

@@ -1,9 +1,12 @@
 ﻿using Classly.Models;
 using Classly.Models.AIGen;
+using Classly.Models.Config;
 using Classly.Services;
 using Classly.Services.AI;
 using Classly.Services.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using OpenAI.Chat;
 using System.Security.Claims;
 using System.Text;
@@ -11,14 +14,17 @@ using System.Text.Json;
 
 namespace Classly.Controllers
 {
+    [Authorize]
     public class CourseNotesController : Controller
     {
         private readonly ICourseNotesService _courseNotesService;
         private readonly IUserService _userService;
-        public CourseNotesController(ICourseNotesService courseNotesService, IUserService userService)
+        private readonly SiteSettings _settings;
+        public CourseNotesController(ICourseNotesService courseNotesService, IUserService userService, IOptions<SiteSettings> options)
         {
             _courseNotesService = courseNotesService;
             _userService = userService;
+            _settings = options.Value;
         }
 
         public IActionResult Index()
@@ -84,7 +90,7 @@ namespace Classly.Controllers
 
             var difficulty = model.Difficulty;
 
-            var client = new ChatClient(model: "gpt-3.5-turbo", apiKey: TestKeys.AIKey);
+            var client = new ChatClient(model: "gpt-3.5-turbo", apiKey: _settings.AIKey);
 
             var messages = new List<ChatMessage>
             {

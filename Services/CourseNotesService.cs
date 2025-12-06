@@ -1,11 +1,16 @@
 ﻿using Classly.Models;
+using Classly.Models.AIGen;
+using Classly.Models.Config;
 using Classly.Models.Courses;
+using Microsoft.Extensions.Options;
 using MySqlConnector;
 
 namespace Classly.Services
 {
     public interface ICourseNotesService
     {
+        public AIPromptsModel GetAIPrompts();
+        bool UpdateAIPrompts(AIPromptsModel model);
         // CREATE
         Task<CourseNote> CreateCourseNoteAsync(CourseNote note);
 
@@ -26,9 +31,57 @@ namespace Classly.Services
     {
         private readonly string _connectionString;
 
-        public CourseNotesService()
+        public CourseNotesService(IConfiguration configuration)
         {
-            _connectionString = TestKeys.currentCon;
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        public AIPromptsModel GetAIPrompts()
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+
+            string sql = @"
+            SELECT AITablePrompt, AIHomewrokPrompt, AILessonPlanPrompt
+            FROM AIPrompts
+        ";
+
+            using var cmd = new MySqlCommand(sql, conn);
+
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                return new AIPromptsModel
+                {
+                    AITablePrompt = reader["AITablePrompt"].ToString(),
+                    AIHomewrokPrompt = reader["AIHomewrokPrompt"].ToString(),
+                    AILessonPlanPrompt = reader["AILessonPlanPrompt"].ToString()
+                };
+            }
+
+            return null; // not found
+        }
+
+        public bool UpdateAIPrompts(AIPromptsModel model)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+
+            string sql = @"
+            UPDATE AIPrompts
+            SET 
+                AITablePrompt = @AITablePrompt,
+                AIHomewrokPrompt = @AIHomewrokPrompt,
+                AILessonPlanPrompt = @AILessonPlanPrompt
+            WHERE Id = @Id;
+        ";
+
+            using var cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@AITablePrompt", model.AITablePrompt);
+            cmd.Parameters.AddWithValue("@AIHomewrokPrompt", model.AIHomewrokPrompt);
+            cmd.Parameters.AddWithValue("@AILessonPlanPrompt", model.AILessonPlanPrompt);
+
+            return cmd.ExecuteNonQuery() > 0;
         }
 
         // CREATE

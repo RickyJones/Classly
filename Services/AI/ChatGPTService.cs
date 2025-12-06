@@ -7,7 +7,12 @@ namespace Classly.Services.AI
 {
     public static class ChatGPTService
     {
-        private static readonly ChatClient client = new(model: "gpt-3.5-turbo", apiKey: TestKeys.AIKey);
+        private static ChatClient client;
+
+        public static void Init(string key)
+        {
+            client = new(model: "gpt-3.5-turbo", apiKey: key);
+        }
         public static string AskAI(string message)
         {
 

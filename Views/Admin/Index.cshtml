@@ -1,0 +1,44 @@
+﻿@using Classly.Models.AIGen
+
+<style>
+    .ai-form {
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+        .ai-form label {
+            font-weight: bold;
+            margin-top: 1rem;
+            color: #333;
+        }
+
+        .ai-form textarea.form-control {
+            min-height: 200px;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+</style>
+<h1>ADMIN</h1>
+
+@model AIPromptsModel
+<form method="post" asp-action="AIPrompts" class="ai-form">
+    <label asp-for="AITablePrompt">AI Table generation prompt</label><br />
+    <textarea asp-for="AITablePrompt" class="form-control"></textarea>
+
+    <label asp-for="AIHomewrokPrompt">AI homework generation prompt</label><br />
+    <textarea asp-for="AIHomewrokPrompt" class="form-control"></textarea>
+
+    <label asp-for="AILessonPlanPrompt">AI lesson plan prompt</label><br />
+    <textarea asp-for="AILessonPlanPrompt" class="form-control"></textarea>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
+
+<h2>User forgot password</h2>
+
+<a href="@Url.Action("ForgotPassword", "Login")">Go here</a>
+

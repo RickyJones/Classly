@@ -9,3 +9,5 @@
 /Models/TestKeys.cs
 /bin/Release/net8.0/linux-x64
 /publish
+/appsettings.json
+/appsettings.Development.json

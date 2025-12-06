@@ -1,6 +1,9 @@
 ﻿using Classly.Models;
+using Classly.Models.Config;
 using Classly.Services.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout;
@@ -8,14 +11,17 @@ using System.Security.Claims;
 
 namespace Classly.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly ICourseService _courseService;
         private readonly IBookingService _bookingService;
-        public PaymentController(ICourseService courseService, IBookingService bookingService)
+        private SiteSettings _settings;
+        public PaymentController(ICourseService courseService, IBookingService bookingService, IOptions<SiteSettings> options)
         {
             _courseService = courseService;
             _bookingService = bookingService;
+            _settings = options.Value;
         }
         public IActionResult Checkout()
         {
@@ -25,7 +31,7 @@ namespace Classly.Controllers
         [HttpPost]
         public async Task <ActionResult> CreateCheckoutSession()
         {
-            StripeConfiguration.ApiKey = TestKeys.StripeKey;
+            StripeConfiguration.ApiKey = _settings.StripeKey;//TestKeys.StripeKey;
 
             var courseIds = JsonConvert.DeserializeObject<List<Guid>>(HttpContext.Session.GetString("BasketCourseIds") ?? "") ?? [];
 
