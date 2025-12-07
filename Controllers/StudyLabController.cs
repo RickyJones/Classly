@@ -19,10 +19,17 @@ namespace Classly.Controllers
         }
         public IActionResult Index()
         {
+
+            //_courseNotesService.get
             return View();
         }
 
-       
+       public async Task<IActionResult> ViewLessonNotes(Guid studentId)
+        {
+
+            var notes = await _courseNotesService.GetNotesForStudentAsync(studentId);
+            return View(notes);
+        }
 
     }
 }

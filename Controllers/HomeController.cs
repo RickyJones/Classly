@@ -41,7 +41,7 @@ namespace Classly.Controllers
                 return RedirectToAction("TutorIndex");
             } else
             {
-                return RedirectToAction("TempStudentDashboard");
+                //return RedirectToAction("TempStudentDashboard");
             }
             return View();
         }
