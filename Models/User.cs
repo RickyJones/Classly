@@ -10,5 +10,7 @@ namespace Classly.Models
         public string Password { get; set; }
         public bool IsTutor { get; set; }
         public Guid? MyTutorId { get; set; } = null;
+        public DateTime CreatedOn {  get; set; }
+        public string Location { get; set; }
     }
 }

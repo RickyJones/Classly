@@ -1,0 +1,119 @@
+﻿@model User
+<div class="container">
+    <div class="card shadow-sm" style="max-width: 540px; margin: 0 auto; margin-top: 100px">
+        <div class="row g-0">
+            <div class="col-md-4 p-3 text-center">
+                <img src="/img/avatar.png" class="rounded-circle img-thumbnail" alt="Profile Picture">
+                <div class="mt-2">
+                    @* <span class="badge bg-success">Online</span> *@
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title d-flex justify-content-between align-items-center">
+                        @Model.Name
+@*                         <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </button> *@
+                    </h5>
+                    @if (Model.IsTutor)
+                    {
+                        <p class="card-text text-muted">
+                            <i class="fas fa-briefcase"></i> Classly Tutor
+                        </p>
+                    } else
+                    {
+                        <p class="card-text text-muted">
+                            <i class="fas fa-briefcase"></i> Classly Student
+                        </p>
+                    }
+                    <p class="card-text text-muted">
+                        <i class="fas fa-briefcase"></i> @Model.Email
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt"></i> @Model.Location
+                        </small>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt"></i>Member since: @Model.CreatedOn.ToString("dd/MM/yyyy")
+                        </small>
+                    </p>
+@*                     <div class="border-top pt-2">
+                        <div class="row text-center">
+                            <div class="col">
+                                <h6>Projects</h6>
+                                <strong>25</strong>
+                            </div>
+                            <div class="col border-start">
+                                <h6>Following</h6>
+                                <strong>142</strong>
+                            </div>
+                            <div class="col border-start">
+                                <h6>Followers</h6>
+                                <strong>289</strong>
+                            </div>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-white">
+            <div class="d-flex justify-content-around">
+                @if (ViewBag.OwnProfile)
+                {
+                    <button class="btn btn-link text-decoration-none" onclick="location.href='@Url.Action("Index", new {userId = Model.Id, update = true})'">
+                        <i class="fas fa-user-plus"></i> Update
+                    </button>
+                }
+                @if (!Model.IsTutor)
+                {
+                    <button class="btn btn-link text-decoration-none" onclick="location.href='@Url.Action("Index", new { userId = Model.MyTutorId, update = false })'">
+                        <i class="fas fa-user-plus"></i> My Tutor
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+    @if (ViewBag.Update)
+    {
+        <div class="card shadow-sm p-2" style="max-width: 540px; margin: 0 auto; margin-top: 100px">
+
+            <form method="post" action="@Url.Action("update")">
+                <input name="Id" type="hidden" value="@Model.Id"/>
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" type="email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" class="form-control" type="password" autocomplete="new-password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label asp-for="Location" class="form-label"></label>
+                        <input asp-for="Location" class="form-control" placeholder="City, country" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+
+        </div>
+    }
+</div>

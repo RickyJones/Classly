@@ -45,7 +45,12 @@ namespace Classly.Services.Data
                     Name = reader["name"]?.ToString() ?? string.Empty,
                     Email = reader["email"]?.ToString() ?? string.Empty,
                     Password = reader["password"]?.ToString(),
-                    IsTutor = bool.Parse(reader["isTutor"]?.ToString() ?? "false")
+                    IsTutor = bool.Parse(reader["isTutor"]?.ToString() ?? "false"),
+                    CreatedOn = (DateTime)reader["createdOn"],
+                    Location = reader["location"].ToString() ?? string.Empty,
+                    MyTutorId = reader["myTutorId"] == DBNull.Value
+    ? (Guid?)null
+    : (Guid)reader["myTutorId"]
                 };
             }
 
@@ -62,7 +67,7 @@ namespace Classly.Services.Data
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync(cancellationToken);
 
-            string query = "INSERT INTO users (id, name, email, password, isTutor, mytutorId) VALUES (@id, @name, @email, @password, @isTutor, @mytutorId)";
+            string query = "INSERT INTO users (id, name, email, password, isTutor, mytutorId, location, createdOn) VALUES (@id, @name, @email, @password, @isTutor, @mytutorId, @location, @createdOn)";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@id", user.Id);
             command.Parameters.AddWithValue("@name", user.Name); // Use actual username
@@ -70,6 +75,8 @@ namespace Classly.Services.Data
             command.Parameters.AddWithValue("@password", hashedPassword);
             command.Parameters.AddWithValue("@isTutor", user.IsTutor);
             command.Parameters.AddWithValue("@myTutorId", user.MyTutorId);
+            command.Parameters.AddWithValue("@location", user.Location);
+            command.Parameters.AddWithValue("@createdOn", DateTime.Now);
 
             int rowsAffected = await command.ExecuteNonQueryAsync(cancellationToken);
 
@@ -124,7 +131,13 @@ namespace Classly.Services.Data
                     Id = Guid.Parse(reader["id"].ToString()),
                     Name = reader["name"].ToString(),
                     Email = reader["email"].ToString(),
-                    Password = reader["password"].ToString()
+                    Password = reader["password"].ToString(),
+                    CreatedOn = (DateTime)reader["createdOn"],
+                    Location = reader["location"].ToString() ?? string.Empty,
+                    IsTutor = (bool)reader["isTutor"],
+                    MyTutorId = reader["myTutorId"] == DBNull.Value
+? (Guid?)null
+    : (Guid)reader["myTutorId"]
                 };
             }
 
@@ -136,15 +149,18 @@ namespace Classly.Services.Data
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync(cancellationToken);
 
-            string query = "UPDATE users SET name = @Name, email = @Email, password = @Password WHERE id = @Id";
+            string query = "UPDATE users SET name = @Name, email = @Email, password = @Password, location = @location WHERE id = @Id";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@Id", user.Id);
             command.Parameters.AddWithValue("@Name", user.Name);
             command.Parameters.AddWithValue("@Email", user.Email);
-            command.Parameters.AddWithValue("@Password", user.Password);
+            command.Parameters.AddWithValue("@Password", hashedPassword);
+            command.Parameters.AddWithValue("@location", user.Location);
 
             int rowsAffected = await command.ExecuteNonQueryAsync(cancellationToken);
 
@@ -175,7 +191,13 @@ namespace Classly.Services.Data
                     Id = Guid.Parse(reader["id"].ToString() ?? "0"),
                     Name = reader["name"]?.ToString() ?? string.Empty,
                     Email = reader["email"]?.ToString() ?? string.Empty,
-                    Password = reader["password"]?.ToString()
+                    Password = reader["password"]?.ToString(),
+                    CreatedOn = (DateTime)reader["createdOn"],
+                    IsTutor = (bool)reader["isTutor"],
+                    Location = reader["location"].ToString() ?? string.Empty,
+                    MyTutorId = reader["myTutorId"] == DBNull.Value
+? (Guid?)null
+    : (Guid)reader["myTutorId"]
                 };
             }
 
@@ -212,7 +234,9 @@ namespace Classly.Services.Data
                     Email = reader["email"]?.ToString() ?? string.Empty,
                     Password = reader["password"]?.ToString(),
                     IsTutor = false,
-                    MyTutorId = tutorId
+                    MyTutorId = tutorId,
+                    CreatedOn = (DateTime)reader["createdOn"],
+                    Location = reader["location"].ToString() ?? string.Empty,
                 };
 
                 Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}");
@@ -248,7 +272,9 @@ namespace Classly.Services.Data
                     Name = reader["name"]?.ToString() ?? string.Empty,
                     Email = reader["email"]?.ToString() ?? string.Empty,
                     Password = reader["password"]?.ToString(),
-                    IsTutor = true
+                    IsTutor = true,
+                    CreatedOn = (DateTime)reader["createdOn"],
+                    Location = reader["location"].ToString() ?? string.Empty
                 };
 
                 Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}");

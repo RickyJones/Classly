@@ -1,0 +1,57 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .stat-banner {
+        border-style: solid;
+        border-width: 3px;
+        border-radius: 8px;
+        border-color: darkorange;
+        background-color: #f3b88c3d;
+        padding: 30px;
+    }
+
+        .stat-banner span, label {
+            color: darkorange;
+            font-weight: bolder;
+        }
+
+        .stat-banner label {
+            color: slategrey;
+            font-weight: unset;
+        }
+
+        .stat-banner span {
+            font-size: x-large;
+        }
+
+    a {
+        color: darkorange;
+    }
+</style>
+
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-bold">Your Learning Dashboard</h1>
+            <p class="lead text-body-secondary">Choose where you'd like to go</p>
+        </div>
+    </div>
+</section>
+<div class="container text-center">
+    <div class="card bg-secondary text-light shadow-lg p-4">
+        <div class="card-body">
+@*             <span class="badge bg-info mb-3">Maintenance Mode</span>
+                <span class="visually-hidden">Loading...</span>
+            </div> *@
+            <h1 class="card-title mb-3 bg-black">Site Under construction</h1>
+            <p class="card-text">
+                Our site is currently in development.<br />
+                By creating your account, you have allowed your tutor to be linked directly to you.<br/>
+                This means your tutor will now be able to better monitor your progress and further enhance your learning journey!
+            </p>
+            <button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("Index", "User", new {userId = Model.MyTutorId})'">My Tutor</button>
+        </div>
+ </div>

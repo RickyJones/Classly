@@ -89,6 +89,7 @@
 
     @{
         var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
     }
     <div class="container">
 
@@ -104,19 +105,22 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 justify-content-center">
                             @if (User.Claims.FirstOrDefault(x => x.Type == "IsTutor")?.Value != "True"){
-                        <li class="nav-item me-4">
+@*                         <li class="nav-item me-4">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Marketplace" asp-action="Index">Marketplace</a>
-                        </li>
-                        <li class="nav-item me-4">
+                        </li> *@
+@*                         <li class="nav-item me-4">
                             <a class="nav-link text-dark" asp-area="" asp-controller="StudyLab" asp-action="Index">Study Lab</a>
-                        </li>
+                        </li> *@
                             }
-                        <li class="nav-item me-4">
+ @*                        <li class="nav-item me-4">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Community" asp-action="Index">Community</a>
                         </li>
                         <li class="nav-item me-4">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
-                        </li>
+                        </li> *@
+                            <li class="nav-item me-4">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index" asp-route-userId="@userId">My Profile</a>
+                            </li>
                         @if(User.Claims.Any(x => x.Type == "IsTutor")){
                             <li class="nav-item me-4">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="CourseNotes" asp-action="Index">Course Notes</a>

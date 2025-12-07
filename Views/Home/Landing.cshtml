@@ -1,7 +1,44 @@
-﻿<h1>Welcome to Classly!</h1>
+﻿@{
+    ViewData["Title"] = "Welcome";
+}
 
-<div>
-    <button onclick="location.href='@Url.Action("Register", "Login")'">Register</button>
-    OR
-    <button onclick="location.href='@Url.Action("Login", "Login")'">Sign-in</button>
+<!-- Full-page background -->
+<style>
+    body {
+        background: url('/img/background.png') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.3); /* light overlay */
+            pointer-events: none;
+            z-index: -1;
+        }
+</style>
+
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="card shadow-lg text-center" style="max-width: 400px;">
+        <div class="card-body">
+            <h4 class="card-title mb-4">Welcome to Classly!</h4>
+
+            <div class="d-flex justify-content-center gap-3">
+                <button type="button"
+                        class="btn btn-primary"
+                        onclick="location.href='@Url.Action("RegisterTutor", "Login")'">
+                    Register
+                </button>
+                <br/>
+                <span class="align-self-center fw-bold">OR</span>
+                <br/>
+                <button type="button"
+                        class="btn btn-dark"
+                        onclick="location.href='@Url.Action("Login", "Login")'">
+                    Sign-in
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

@@ -15,6 +15,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<IBookingService, BookingService>();
 builder.Services.AddTransient<ICourseNotesService, CourseNotesService>();
+builder.Services.AddSingleton<IAIService, DeepSeekService>();
 builder.Services.AddSingleton(TimeProvider.System);
 
 builder.Services.Configure<SiteSettings>(
@@ -22,7 +23,6 @@ builder.Services.Configure<SiteSettings>(
 var connString = builder.Configuration.GetConnectionString("ClasslyDB");
 Console.WriteLine(connString);
 
-ChatGPTService.Init(builder.Configuration["SiteSettings:AIKey"]);
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -20,11 +20,13 @@ namespace Classly.Controllers
         private readonly ICourseNotesService _courseNotesService;
         private readonly IUserService _userService;
         private readonly SiteSettings _settings;
-        public CourseNotesController(ICourseNotesService courseNotesService, IUserService userService, IOptions<SiteSettings> options)
+        private readonly IAIService _aiService;
+        public CourseNotesController(ICourseNotesService courseNotesService, IUserService userService, IOptions<SiteSettings> options, IAIService aiService)
         {
             _courseNotesService = courseNotesService;
             _userService = userService;
             _settings = options.Value;
+            _aiService = aiService;
         }
 
         public IActionResult Index()
@@ -87,19 +89,19 @@ namespace Classly.Controllers
                 }
             }
 
+            var prompts = _courseNotesService.GetAIPrompts();
 
             var difficulty = model.Difficulty;
 
             var client = new ChatClient(model: "gpt-3.5-turbo", apiKey: _settings.AIKey);
 
-            var messages = new List<ChatMessage>
+            var messages = new List<string>
             {
-                ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage("No preamble or explanation don't allow more than 2 sequential <br/> if you use them. From the vocabulary covered in the following notes, create a raw HTML table with no styling with the fields vocabulary, definition and example. Ensure you populate very cell as appropriate :\n" + notesContent +". Wrap the HTML I need with <content></content>")
+                prompts.AITablePrompt + notesContent + ". Wrap the HTML I need with <content></content>"
 
             };
 
-            var tablesResponse = await ChatGPTService.AskAIAsync(messages);
+            var tablesResponse = await _aiService.AskAIAsync(messages);
 
             string startTag = "<content>";
             string endTag = "</content>";
@@ -119,39 +121,23 @@ namespace Classly.Controllers
             int classDurationMins = model.LessonDuration;
 
 
-            var homeworkMessages = new List<ChatMessage>
+            var homeworkMessages = new List<string>
             {
-                ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                ChatMessage.CreateUserMessage($"With no preamble or other explanations don't allow more than 2 sequential <br/> if you use them. Generate homework to focus on the vocabulary covered. Group the homework into question type(s) ({specifyHomeworkType}). Produce 10 questions for each question type at difficulty:" + difficulty)
+                prompts.AIHomewrokPrompt + $"Group the homework into question type(s) ({specifyHomeworkType}). Produce 10 questions for each question type at difficulty: " + difficulty
             };
 
-            var homeworkResponse = await ChatGPTService.AskAIAsync(homeworkMessages);
+            var homeworkResponse = await _aiService.AskAIAsync(homeworkMessages);
 
 
             string lessonPlanResponse = string.Empty;
             if (createNextLessonPlan)
             {
-                var lessonPlan = new List<ChatMessage>
+                var lessonPlan = new List<string>
                 {
-                     ChatMessage.CreateSystemMessage("You are a helpful teaching assistant."),
-                     ChatMessage.CreateUserMessage(@$"Genrate an online 1-1 ESL lesson plan using the exact structure that follows.
-No preamble or explanation, don't allow more than 2 sequential <br/> if you use them.
-The student level is {difficulty} and the class length will be {classDurationMins} mins.
-The topic will be {topicOfNextLesson}. All vocabulary, idioms, and phrasal verbs must include simle definitions and clear example sentences, adapted to student level.
-
-Always use these 7 sections in exact order:
-Warm-up & Lead-in: short questions about topic (pictures optional).
-Vocabulary Presentation: introduce level appropriate vocab words (at least 3) with simple definitions, one example sentence each, optional images.
-Which word: Questions - teacher gives clues; student says the correct vocabulary word.
-Idioms and practice: include 1-3 idioms with simple definitions and examples; include guided practice.
-Phrasal verbs and practice: include 2-4 phrasal verbs  with simple definitions, examples and guided practice.
-Review and cooldown: light recap conversation using covered vocabulary, idioms and phrasal verbs.
-Review game - teacher says definition; student says vocabulary word, idiom or phrasal verb. Give a few examples for this
-
-Keep the lesson plan clear, simple and practical for online teaching. Do not include homework")
+                     $"Genrate an online 1-1 ESL lesson plan using the exact structure that follows. No preamble or explanation, don't allow more than 2 sequential <br/> if you use them.\r\nThe student level is {difficulty} and the class length will be {classDurationMins} mins.\r\nThe topic will be {topicOfNextLesson}. All vocabulary, idioms, and phrasal verbs must include simle definitions and clear example sentences, adapted to student level." + prompts.AILessonPlanPrompt
                 };
 
-                lessonPlanResponse = await ChatGPTService.AskAIAsync(lessonPlan);
+                lessonPlanResponse = await _aiService.AskAIAsync(lessonPlan);
             }
             
 
