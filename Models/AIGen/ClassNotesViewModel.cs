@@ -10,6 +10,7 @@
         public string[] HomeworkTypes { get; set; } = [];
         public int LessonDuration { get; set; }
         public string topicOfNextLesson { get; set; }
+        public string Topic { get; set; }
 
     }
 

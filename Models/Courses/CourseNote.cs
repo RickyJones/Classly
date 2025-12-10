@@ -13,6 +13,8 @@
         public string Homework { get; set; }
         public string NextLessonPlan { get; set; }
 
+        public string Topic { get; set; }
+
         public DateTime CreatedAt { get; set; }
     }
 

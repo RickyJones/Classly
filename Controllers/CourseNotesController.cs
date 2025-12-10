@@ -162,7 +162,8 @@ namespace Classly.Controllers
                 Notes = tablesResponse,
                 TutorId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 StudentId = model.StudentId,
-                NextLessonPlan = lessonPlanResponse
+                NextLessonPlan = lessonPlanResponse,
+                Topic = model.Topic
             });
             //await System.IO.File.WriteAllTextAsync("StudyNotes.json", json);
 

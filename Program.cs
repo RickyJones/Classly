@@ -16,6 +16,7 @@ builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<IBookingService, BookingService>();
 builder.Services.AddTransient<ICourseNotesService, CourseNotesService>();
 builder.Services.AddSingleton<IAIService, DeepSeekService>();
+builder.Services.AddTransient<IHomeworkSubmissionService, HomeworkSubmissionService>();
 builder.Services.AddSingleton(TimeProvider.System);
 
 builder.Services.Configure<SiteSettings>(
