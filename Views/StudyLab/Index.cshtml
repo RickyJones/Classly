@@ -45,12 +45,16 @@
                                         @due.Count assignment(s) due...
                                     </button>
                                 </h2>
+
                                 <div id="collapseDue" class="accordion-collapse collapse" aria-labelledby="headingDue" data-bs-parent="#dueAccordion">
                                     <div class="accordion-body p-0">
                                         <ul class="list-group list-group-flush">
                                             @foreach (var hw in due)
                                             {
-                                                <li class="list-group-item">@hw.Difficulty @hw.Topic</li>
+                                                var hwContent = homeworkService.GetSubmissionForNote(hw.Id);
+
+
+                                                <li class="list-group-item">@hw.Difficulty @hw.Topic <a href="@Url.Action("HomeworkSubmission", new { homeworkSubmissionId = hwContent?.Id, courseNoteId = hw.Id })">Go</a></li>
                                             }
                                         </ul>
                                     </div>

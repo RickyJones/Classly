@@ -1,0 +1,31 @@
+﻿@using Classly.Models.Courses
+@using Newtonsoft.Json
+@model HomeworkSubmission
+@{
+    var notes = JsonConvert.DeserializeObject<CourseNote>(ViewBag.Notes);
+}
+
+<h1>Homework submission</h1>
+
+<div class="row">
+    <div class="col">
+        <form method="post" action="SaveHomework">
+            <input type="hidden" name="LinkedCourseNoteId" value="@Model.LinkedCourseNoteId" />
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <textarea style="min-height:1000px;" class="form-control" name="Content">
+                @(Model.Content)
+            </textarea>
+            <div>
+                <label>Mark as complete?</label>
+                <input class="form-check-input" name="MarkAsComplete" type="checkbox" value="true"/>
+            </div>
+            <button class="btn btn-primary">Save</button>
+        </form>
+    </div>
+    <div class="col">
+        <h2>Tasks</h2>
+        @Html.Raw(notes.Homework)
+        <h2>Lesson notes</h2>
+        @Html.Raw(notes.Notes)
+    </div>
+</div>

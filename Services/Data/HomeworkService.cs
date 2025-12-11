@@ -36,16 +36,18 @@ namespace Classly.Services.Data
         // CREATE
         public void AddSubmission(HomeworkSubmission hw)
         {
+            hw.Id = Guid.NewGuid();
             using var conn = new MySqlConnection(_connectionString);
             conn.Open();
             string sql = @"INSERT INTO homeworksubmission 
-                       (id, content, createdAt, linkedCourseNoteId) 
-                       VALUES (@id, @content, @createdAt, @linkedCourseNoteId)";
+                       (id, content, createdAt, linkedCourseNoteId, markAsComplete) 
+                       VALUES (@id, @content, @createdAt, @linkedCourseNoteId, @markAsComplete)";
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@id", hw.Id);
             cmd.Parameters.AddWithValue("@content", hw.Content);
             cmd.Parameters.AddWithValue("@createdAt", hw.CreatedAt);
             cmd.Parameters.AddWithValue("@linkedCourseNoteId", hw.LinkedCourseNoteId);
+            cmd.Parameters.AddWithValue("@markAsComplete", hw.MarkAsComplete);
             cmd.ExecuteNonQuery();
         }
 
@@ -55,7 +57,7 @@ namespace Classly.Services.Data
             var list = new List<HomeworkSubmission>();
             using var conn = new MySqlConnection(_connectionString);
             conn.Open();
-            string sql = "SELECT id, content, createdAt, linkedCourseNoteId FROM homeworksubmission";
+            string sql = "SELECT id, content, createdAt, linkedCourseNoteId, markAsComplete FROM homeworksubmission";
             using var cmd = new MySqlCommand(sql, conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
@@ -65,20 +67,26 @@ namespace Classly.Services.Data
                     Id = reader.GetGuid("id"),
                     Content = reader.IsDBNull(reader.GetOrdinal("content")) ? null : reader.GetString("content"),
                     CreatedAt = reader.IsDBNull(reader.GetOrdinal("createdAt")) ? (DateTime?)null : reader.GetDateTime("createdAt"),
-                    LinkedCourseNoteId = reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId")) ? null : reader.GetString("linkedCourseNoteId")
+                    LinkedCourseNoteId = reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId")) ? null : reader.GetString("linkedCourseNoteId"),
+                    MarkAsComplete = reader.GetBoolean("markAsComplete")
                 });
             }
             return list;
         }
 
         // READ ONE
-        public HomeworkSubmission GetSubmissionById(Guid id)
+        public HomeworkSubmission? GetSubmissionById(Guid id)
         {
             using var conn = new MySqlConnection(_connectionString);
             conn.Open();
-            string sql = "SELECT id, content, createdAt, linkedCourseNoteId FROM homeworksubmission WHERE id=@id";
+
+            string sql = @"SELECT id, content, createdAt, linkedCourseNoteId, markAsComplete 
+                   FROM homeworksubmission 
+                   WHERE id = @id";
+
             using var cmd = new MySqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.Add("@id", MySqlDbType.VarChar).Value = id.ToString();
+
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
@@ -87,17 +95,22 @@ namespace Classly.Services.Data
                     Id = reader.GetGuid("id"),
                     Content = reader.IsDBNull(reader.GetOrdinal("content")) ? null : reader.GetString("content"),
                     CreatedAt = reader.IsDBNull(reader.GetOrdinal("createdAt")) ? (DateTime?)null : reader.GetDateTime("createdAt"),
-                    LinkedCourseNoteId = reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId")) ? null : reader.GetString("linkedCourseNoteId")
+                    LinkedCourseNoteId = (reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId")) ? (Guid?)null : reader.GetGuid("linkedCourseNoteId")).ToString(),
+                    MarkAsComplete = reader.IsDBNull(reader.GetOrdinal("markAsComplete")) ? false : reader.GetBoolean("markAsComplete")
                 };
             }
+
             return null;
         }
+
+
+
 
         public HomeworkSubmission GetSubmissionForNote(Guid noteId)
         {
             using var conn = new MySqlConnection(_connectionString);
             conn.Open();
-            string sql = "SELECT id, content, createdAt, linkedCourseNoteId FROM homeworksubmission WHERE linkedCourseNoteId=@noteId";
+            string sql = "SELECT id, content, createdAt, linkedCourseNoteId, markAsComplete FROM homeworksubmission WHERE linkedCourseNoteId=@noteId";
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@noteId", noteId);
             using var reader = cmd.ExecuteReader();
@@ -108,7 +121,8 @@ namespace Classly.Services.Data
                     Id = reader.GetGuid("id"),
                     Content = reader.IsDBNull(reader.GetOrdinal("content")) ? null : reader.GetString("content"),
                     CreatedAt = reader.IsDBNull(reader.GetOrdinal("createdAt")) ? (DateTime?)null : reader.GetDateTime("createdAt"),
-                    LinkedCourseNoteId = reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId")) ? null : reader.GetString("linkedCourseNoteId")
+                    LinkedCourseNoteId = reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId")) ? null : reader.GetString("linkedCourseNoteId"),
+                    MarkAsComplete = reader.GetBoolean("markAsComplete")
                 };
             }
             return null;
@@ -127,6 +141,7 @@ namespace Classly.Services.Data
             cmd.Parameters.AddWithValue("@createdAt", hw.CreatedAt);
             cmd.Parameters.AddWithValue("@linkedCourseNoteId", hw.LinkedCourseNoteId);
             cmd.Parameters.AddWithValue("@id", hw.Id);
+            cmd.Parameters.AddWithValue("@markAsComplete", hw.MarkAsComplete);
             cmd.ExecuteNonQuery();
         }
 

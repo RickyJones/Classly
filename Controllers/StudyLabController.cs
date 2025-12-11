@@ -5,6 +5,7 @@ using Classly.Services.AI;
 using Classly.Services.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using OpenAI.Chat;
 using System.Text.Json;
 
@@ -34,29 +35,50 @@ namespace Classly.Controllers
             return View(notes);
         }
 
-        public async Task<IActionResult> CreateHomeworkSubmission(Guid courseNoteId)
-        {
+        //public async Task<IActionResult> CreateHomeworkSubmission(Guid courseNoteId)
+        //{
 
+        //    var notes = await _courseNotesService.GetCourseNoteAsync(courseNoteId);
+        //    return View(notes);
+        //}
+
+        public async Task<IActionResult> HomeworkSubmission(Guid homeworkSubmissionId, Guid courseNoteId)
+        {
+            HomeworkSubmission hw = null;
+            if (homeworkSubmissionId != Guid.Empty)
+            {
+                hw = _homeworkService.GetSubmissionById(homeworkSubmissionId);
+            }
+
+            if(hw == null)
+            {
+                hw = new HomeworkSubmission
+                {
+                    LinkedCourseNoteId = courseNoteId.ToString(),
+                };
+            }
             var notes = await _courseNotesService.GetCourseNoteAsync(courseNoteId);
-            return View(notes);
-        }
-
-        public async Task<IActionResult> HomeworkSubmission(Guid homeworkSubmissionId)
-        {
-
-            var hw = _homeworkService.GetSubmissionById(homeworkSubmissionId);
+            ViewBag.Notes = JsonConvert.SerializeObject(notes);
             return View(hw);
         }
 
         [HttpPost]
-        public IActionResult SaveHomework(HomeworkSubmission homeworkSubmission, bool markAsComplete)
+        public IActionResult SaveHomework(HomeworkSubmission homeworkSubmission)
         {
-            if(markAsComplete)
+            if(homeworkSubmission.Id == Guid.Empty)
             {
-                return RedirectToAction("Index");
+                _homeworkService.AddSubmission(homeworkSubmission);
             } else
             {
-                return RedirectToAction("HomeworkSubmission", new { homeworkSubmissionId = homeworkSubmission.Id });
+                _homeworkService.UpdateSubmission(homeworkSubmission);
+            }
+            if (homeworkSubmission.MarkAsComplete)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("HomeworkSubmission", new { homeworkSubmissionId = homeworkSubmission.Id, courseNoteId = homeworkSubmission.LinkedCourseNoteId });
             }
         }
 
