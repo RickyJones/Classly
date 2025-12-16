@@ -11,6 +11,8 @@
 
     var due = await courseNotesService.GetNotesWithoutHomeworkAsync(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))) ?? [];
 
+    var submitted =  homeworkService.GetSubmissionsByStudentId(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))) ?? [];
+
 
 }
 
@@ -83,7 +85,7 @@
                             <div id="collapseSubmitted" class="accordion-collapse collapse" aria-labelledby="headingSubmitted" data-bs-parent="#submittedAccordion">
                                 <div class="accordion-body p-0">
                                     <ul class="list-group list-group-flush">
-                                        @for (var i = 0; i < notes.Count; i++)
+                                        @for (var i = 0; i < submitted.Count; i++)
                                         {
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                                 <div>

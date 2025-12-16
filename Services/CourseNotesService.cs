@@ -47,15 +47,14 @@ namespace Classly.Services
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = @"
-        SELECT cn.* 
-        FROM coursenotes cn
-        WHERE cn.StudentId = @StudentId
-        AND NOT EXISTS (
-            SELECT 1 
-            FROM homeworksubmission hw 
-            WHERE hw.linkedCourseNoteId = cn.Id
-        )";
+            string sql = @"SELECT cn.*
+FROM coursenotes cn
+LEFT JOIN homeworksubmission hw
+  ON hw.linkedCourseNoteId = cn.Id
+  AND hw.markAsComplete = 1
+WHERE cn.StudentId = @StudentId
+  AND hw.linkedCourseNoteId IS NULL;
+";
 
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@StudentId", studentId.ToString());
@@ -63,6 +62,12 @@ namespace Classly.Services
 
             while (await reader.ReadAsync())
             {
+                var idStr = reader.GetGuid("Id");
+                var tutorStr = reader.GetGuid("TutorId");
+                var studentStr = reader.GetGuid("StudentId");
+
+                Console.WriteLine($"Row: Id={idStr}, TutorId={tutorStr}, StudentId={studentStr}");
+
                 notes.Add(new CourseNote
                 {
                     Id = reader.GetGuid("Id"),

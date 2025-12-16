@@ -2,6 +2,7 @@
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Classly.Services.Data
 {
@@ -12,6 +13,7 @@ namespace Classly.Services.Data
 
         // READ ALL
         List<HomeworkSubmission> GetSubmissions();
+        List<HomeworkSubmission> GetSubmissionsByStudentId(Guid studentId);
 
         // READ ONE
         HomeworkSubmission GetSubmissionById(Guid id);
@@ -121,7 +123,7 @@ namespace Classly.Services.Data
                     Id = reader.GetGuid("id"),
                     Content = reader.IsDBNull(reader.GetOrdinal("content")) ? null : reader.GetString("content"),
                     CreatedAt = reader.IsDBNull(reader.GetOrdinal("createdAt")) ? (DateTime?)null : reader.GetDateTime("createdAt"),
-                    LinkedCourseNoteId = reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId")) ? null : reader.GetString("linkedCourseNoteId"),
+                    LinkedCourseNoteId = reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId")) ? null : reader.GetGuid("linkedCourseNoteId").ToString(),
                     MarkAsComplete = reader.GetBoolean("markAsComplete")
                 };
             }
@@ -155,5 +157,42 @@ namespace Classly.Services.Data
             cmd.Parameters.AddWithValue("@id", id);
             cmd.ExecuteNonQuery();
         }
+
+        public List<HomeworkSubmission> GetSubmissionsByStudentId(Guid studentId)
+        {
+            var submissions = new List<HomeworkSubmission>();
+
+            using var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+
+            string sql = @"
+        SELECT hw.*
+        FROM homeworksubmission hw
+        INNER JOIN coursenotes cn
+            ON hw.linkedCourseNoteId = cn.Id
+        WHERE cn.StudentId = @StudentId;
+    ";
+
+            using var cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.Add("@StudentId", MySqlDbType.VarChar).Value = studentId.ToString();
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read()) // loop through all rows
+            {
+                submissions.Add(new HomeworkSubmission
+                {
+                    Id = reader.GetGuid("id"),
+                    Content = reader.IsDBNull(reader.GetOrdinal("content")) ? null : reader.GetString("content"),
+                    CreatedAt = reader.IsDBNull(reader.GetOrdinal("createdAt")) ? (DateTime?)null : reader.GetDateTime("createdAt"),
+                    LinkedCourseNoteId = reader.IsDBNull(reader.GetOrdinal("linkedCourseNoteId"))
+                        ? string.Empty
+                        : reader.GetGuid("linkedCourseNoteId").ToString(),
+                    MarkAsComplete = !reader.IsDBNull(reader.GetOrdinal("markAsComplete")) && reader.GetBoolean("markAsComplete")
+                });
+            }
+
+            return submissions;
+        }
+
     }
 }
