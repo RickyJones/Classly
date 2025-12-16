@@ -7,13 +7,13 @@
 @{
     User student = null;
     User teacher = null;
+    List<HomeworkSubmission> hw = [];
     if (Model != null && Model.Any())
     {
         student = await userService.GetUser(Model.FirstOrDefault().StudentId);
         teacher = await userService.GetUser(Model.FirstOrDefault().TutorId);
+        hw = HomeworkSubmissionService.GetSubmissionsByStudentId(Model.FirstOrDefault().StudentId) ?? [];
     }
-
-    var hw = HomeworkSubmissionService.GetSubmissionsByStudentId(Model.FirstOrDefault().StudentId) ?? [];
 }
 
 <style>

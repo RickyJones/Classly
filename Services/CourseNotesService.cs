@@ -95,7 +95,7 @@ WHERE cn.StudentId = @StudentId
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = @"INSERT INTO courseNotes 
+            string sql = @"INSERT INTO coursenotes 
                        (Id, TutorId, StudentId, Difficulty, Notes, Homework, NextLessonPlan, CreatedAt, Topic)
                        VALUES (@Id, @TutorId, @StudentId, @Difficulty, @Notes, @Homework, @NextLessonPlan, @CreatedAt, @Topic)";
 
@@ -120,7 +120,7 @@ WHERE cn.StudentId = @StudentId
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = "SELECT * FROM courseNotes WHERE Id = @Id";
+            string sql = "SELECT * FROM coursenotes WHERE Id = @Id";
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@Id", id.ToString());
 
@@ -149,7 +149,7 @@ WHERE cn.StudentId = @StudentId
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = @"UPDATE courseNotes 
+            string sql = @"UPDATE coursenotes 
                        SET TutorId=@TutorId, StudentId=@StudentId, Difficulty=@Difficulty, 
                            Notes=@Notes, Homework=@Homework, NextLessonPlan=@NextLessonPlan, Topic=@Topic
                        WHERE Id=@Id";
@@ -174,7 +174,7 @@ WHERE cn.StudentId = @StudentId
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = "DELETE FROM courseNotes WHERE Id=@Id";
+            string sql = "DELETE FROM coursenotes WHERE Id=@Id";
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@Id", id.ToString());
 
@@ -190,7 +190,7 @@ WHERE cn.StudentId = @StudentId
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string sql = "SELECT * FROM courseNotes WHERE StudentId = @StudentId";
+            string sql = "SELECT * FROM coursenotes WHERE StudentId = @StudentId";
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@StudentId", studentId.ToString());
 
