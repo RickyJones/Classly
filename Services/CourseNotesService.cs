@@ -221,7 +221,7 @@ WHERE cn.StudentId = @StudentId
 
             string sql = @"
         SELECT AITablePrompt, AIHomewrokPrompt, AILessonPlanPrompt
-        FROM AIPrompts
+        FROM aiprompts
     ";
 
             using var cmd = new MySqlCommand(sql, conn);
@@ -245,7 +245,7 @@ WHERE cn.StudentId = @StudentId
             conn.Open();
 
             string sql = @"
-        UPDATE AIPrompts
+        UPDATE aiprompts
         SET 
             AITablePrompt = @AITablePrompt,
             AIHomewrokPrompt = @AIHomewrokPrompt,
