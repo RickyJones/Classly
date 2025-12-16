@@ -2,170 +2,211 @@
 @using Classly.Services
 @using System.Security.Claims
 @using Classly.Services.Data
-@inject ICourseNotesService courseNotesService;
-@inject IHomeworkSubmissionService homeworkService;
+@inject ICourseNotesService courseNotesService
+@inject IHomeworkSubmissionService homeworkService
 
 @{
-    var notes = await courseNotesService.GetNotesForStudentAsync(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))) ?? [];
-    var learningMaterials = notes.Select(x => x.Notes)?.ToList() ??[];
-
-    var due = await courseNotesService.GetNotesWithoutHomeworkAsync(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))) ?? [];
-
-    var submitted =  homeworkService.GetSubmissionsByStudentId(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))) ?? [];
-
-
+    var studentId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+    var notes = await courseNotesService.GetNotesForStudentAsync(studentId) ?? [];
+    var dueNotes = await courseNotesService.GetNotesWithoutHomeworkAsync(studentId) ?? [];
+    var submissions = homeworkService.GetSubmissionsByStudentId(studentId) ?? [];
 }
 
-<section class="py-5 text-center container">
-    <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-            <h1 class="fw-bold">Study Lab</h1>
+<section class="py-4 text-center container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <h1 class="fw-bold mb-2">Study Lab</h1>
             <p class="lead text-body-secondary">Personalised AI-powered learning to help you practice and progress.</p>
         </div>
     </div>
 </section>
+
 <div class="container">
-    <div class="row">
-        <div class="col-6">
-            <div class="row">
-                <div class="col">
-                    <h2>Homework Due</h2>
-                    @if(due.Count == 0)
+    <div class="row g-4">
+        <!-- Left column -->
+        <div class="col-lg-6">
+            <!-- Homework due -->
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">Homework due</span>
+                    <span class="badge bg-warning text-dark">@dueNotes.Count</span>
+                </div>
+                <div class="card-body">
+                    @if (dueNotes.Count == 0)
                     {
-                        <div class="alert alert-success">No homework due</div>
-                    } else
-                    {
-                        <div class="accordion" id="dueAccordion">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingDue">
-                                    <button class="accordion-button collapsed alert alert-warning p-2"
-                                            type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#collapseDue"
-                                            aria-expanded="false"
-                                            aria-controls="collapseDue">
-                                        @due.Count assignment(s) due...
-                                    </button>
-                                </h2>
-
-                                <div id="collapseDue" class="accordion-collapse collapse" aria-labelledby="headingDue" data-bs-parent="#dueAccordion">
-                                    <div class="accordion-body p-0">
-                                        <ul class="list-group list-group-flush">
-                                            @foreach (var hw in due)
-                                            {
-                                                var hwContent = homeworkService.GetSubmissionForNote(hw.Id);
-
-
-                                                <li class="list-group-item">@hw.Difficulty @hw.Topic <a href="@Url.Action("HomeworkSubmission", new { homeworkSubmissionId = hwContent?.Id, courseNoteId = hw.Id })">Go</a></li>
-                                            }
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="alert alert-success mb-0 d-flex align-items-center">
+                            <i class="bi bi-check-circle me-2"></i> No homework due
                         </div>
-
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var note in dueNotes)
+                            {
+                                var submission = homeworkService.GetSubmissionForNote(note.Id); // may be null
+                                                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                                    <div class="d-flex flex-column">
+                                                                                                        <div class="mb-1">
+                                                                                                            <span class="badge
+                                                        @(note.Difficulty == "Easy" ? "bg-success" :
+                                                                                                    note.Difficulty == "Medium" ? "bg-warning text-dark" :
+                                                                                                    "bg-danger")">
+                                        @note.Difficulty
+                                    </span>
+                                    <span class="ms-2 fw-semibold">@note.Topic</span>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    @note.CreatedAt.ToString("dd MMM yyyy")
+                                </small>
+                            </div>
+                            <a class="btn btn-outline-primary"
+                               href="@Url.Action("HomeworkSubmission", new { homeworkSubmissionId = submission?.Id, courseNoteId = note.Id })">
+                                Start
+                            </a>
+                        </li>
+                                                }
+                        </ul>
                     }
                 </div>
-                <hr/>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="accordion" id="submittedAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingSubmitted">
-                                <button class="accordion-button collapsed"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapseSubmitted"
-                                        aria-expanded="false"
-                                        aria-controls="collapseSubmitted">
-                                    Submitted Homework
+
+            <!-- Submitted homework -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">Submitted homework</span>
+                    <span class="badge bg-primary">@submissions.Count</span>
+                </div>
+                <div class="card-body">
+                    @if (submissions.Count == 0)
+                    {
+                        <div class="text-body-secondary">You haven’t submitted any homework yet.</div>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var sub in submissions)
+                            {
+                                var linkedNote = notes.FirstOrDefault(n => n.Id.ToString() == sub.LinkedCourseNoteId);
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="d-flex flex-column">
+                                        <div class="mb-1">
+                                            <i class="bi bi-journal-text text-primary me-2"></i>
+                                            <span class="fw-semibold">@(linkedNote?.Topic ?? "Untitled")</span>
+                                            @if (linkedNote != null)
+                                            {
+                                                <span class="badge
+                                                                @(linkedNote.Difficulty == "Easy" ? "bg-success" :
+                                                                                                            linkedNote.Difficulty == "Medium" ? "bg-warning text-dark" :
+                                                                                                            "bg-danger") ms-2">
+                                        @linkedNote.Difficulty
+                                    </span>
+                                                                        }
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar-check me-1"></i>
+                                            @(sub.CreatedAt?.ToString("dd MMM yyyy") ?? "Date unknown")
+                                        </small>
+                                    </div>
+                                    <a class="btn btn-outline-secondary"
+                                       href="@Url.Action("HomeworkSubmission", new { homeworkSubmissionId = sub.Id, courseNoteId = sub.LinkedCourseNoteId })">
+                                        View
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <span class="fw-semibold">Your learning notes</span>
+                </div>
+                <div class="card-body">
+                    @if (notes.Count == 0)
+                    {
+                        <div class="text-body-secondary">No notes yet. Once your tutor adds notes, they’ll appear here.</div>
+                    }
+                    else
+                    {
+                        <div class="accordion" id="notesAccordion">
+                            @for (var i = 0; i < notes.Count; i++)
+                            {
+                                var note = notes[i];
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-@i">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#collapse-@i"
+                                                aria-expanded="false"
+                                                aria-controls="collapse-@i">
+                                            <span class="badge
+                                                        @(note.Difficulty == "Easy" ? "bg-success" :
+                                                                                                    note.Difficulty == "Medium" ? "bg-warning text-dark" :
+                                                                                                    "bg-danger") me-2">
+                                        @note.Difficulty
+                                    </span>
+                                    <span class="fw-semibold me-2">@note.Topic</span>
+                                    <small class="text-muted">@note.CreatedAt.ToString("dd MMM yyyy")</small>
                                 </button>
                             </h2>
-                            <div id="collapseSubmitted" class="accordion-collapse collapse" aria-labelledby="headingSubmitted" data-bs-parent="#submittedAccordion">
-                                <div class="accordion-body p-0">
-                                    <ul class="list-group list-group-flush">
-                                        @for (var i = 0; i < submitted.Count; i++)
-                                        {
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <i class="bi bi-journal-text text-primary me-2"></i>
-                                                    <span class="fw-bold">Level:</span>
-                                                    <span class="badge
-                                        @(notes[i].Difficulty == "Easy" ? "bg-success" :
-                                                                                                  notes[i].Difficulty == "Medium" ? "bg-warning text-dark" :
-                                                                                                  "bg-danger") ms-1">
-                                                    @notes[i].Difficulty
-                                                </span>
-                                            </div>
-                                            <i>Topic: <b>@notes[i].Topic</b></i>
-
-                                                <small class="text-muted">
-                                                    <i class="bi bi-calendar-event me-1"></i>
-                                                    @notes[i].CreatedAt.ToString("dd MMM yyyy")
-                                                </small>
-                                                <button class="btn btn-primary">View</button>
-                                            </li>
-                                                                                }
-                                    </ul>
+                            <div id="collapse-@i" class="accordion-collapse collapse" aria-labelledby="heading-@i" data-bs-parent="#notesAccordion">
+                                <div class="accordion-body">
+                                    @Html.Raw(note.Notes)
                                 </div>
                             </div>
                         </div>
-                    </div>
-
+                                                }
+                        </div>
+                    }
                 </div>
             </div>
         </div>
-        <div class="col-6">
-            <h2>Your Learning Notes</h2>
-            @for (var i = 0; i < notes.Count; i++)
-            {
-                <div>
-                    <div class="accordion" id="accordionExample-@i">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading-@i">
-                                <button class="accordion-button" type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapse-@i"
-                                        aria-expanded="false"
-                                        aria-controls="collapse-@i">
-                                    @notes[i].Difficulty @notes[i].Topic @notes[i].CreatedAt.ToString("dd MMM yyyy")
-                                </button>
-                             </h2>
-                             <div>
-                                <div id="collapse-@i" class="accordion-collapse collapse"
-                                     aria-labelledby="heading-@i"
-                                     data-bs-parent="#accordionExample-@i">
-                                    <div class="accordion-body">
-                                        @Html.Raw(notes[i].Notes)
-                                    </div>
-                                </div>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-
-            }
-        </div>
     </div>
-</div>
-<div class="row">
-    <h2>Your lessons</h2>
-    <ul class="list-group list-group-flush">
-        @foreach (var note in notes)
-        {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <strong>Level:</strong> @note.Difficulty
-                    <button class="ms-4 btn btn-outline-primary">View</button>
-                </span>
 
-                <span class="badge bg-primary rounded-pill">
-                    @note.CreatedAt.ToString("dd MMM yyyy")
-                </span>
-            </li>
-        }
-    </ul>
+    <!-- Lessons list -->
+@*     <div class="row mt-4">
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <span class="fw-semibold">Your lessons</span>
+                </div>
+                <div class="card-body p-0">
+                    @if (notes.Count == 0)
+                    {
+                        <div class="p-3 text-body-secondary">No lessons yet.</div>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var note in notes)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-semibold">@note.Topic</span>
+                                        <span class="badge
+                                                    @(note.Difficulty == "Easy" ? "bg-success" :
+                                                                                            note.Difficulty == "Medium" ? "bg-warning text-dark" :
+                                                                                            "bg-danger") ms-2">
+                                    @note.Difficulty
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <small class="text-muted me-3">@note.CreatedAt.ToString("dd MMM yyyy")</small>
+                                <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Lesson", new { id = note.Id })">View</a>
+                            </div>
+                        </li>
+                                                }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div> *@
 </div>
 
 @* <div class="row">

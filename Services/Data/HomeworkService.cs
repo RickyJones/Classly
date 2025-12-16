@@ -47,7 +47,7 @@ namespace Classly.Services.Data
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@id", hw.Id);
             cmd.Parameters.AddWithValue("@content", hw.Content);
-            cmd.Parameters.AddWithValue("@createdAt", hw.CreatedAt);
+            cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
             cmd.Parameters.AddWithValue("@linkedCourseNoteId", hw.LinkedCourseNoteId);
             cmd.Parameters.AddWithValue("@markAsComplete", hw.MarkAsComplete);
             cmd.ExecuteNonQuery();
@@ -136,7 +136,7 @@ namespace Classly.Services.Data
             using var conn = new MySqlConnection(_connectionString);
             conn.Open();
             string sql = @"UPDATE homeworksubmission 
-                       SET content=@content, createdAt=@createdAt, linkedCourseNoteId=@linkedCourseNoteId 
+                       SET content=@content, createdAt=@createdAt, linkedCourseNoteId=@linkedCourseNoteId, markAsComplete = @markAsComplete
                        WHERE id=@id";
             using var cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@content", hw.Content);

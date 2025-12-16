@@ -35,9 +35,13 @@ namespace Classly.Services.AI
         {
             var payload = new
             {
-                model = "deepseek-chat", // or deepseek-coder, deepseek-math, etc.
-                messages = messages.Select(m => new { role = "You are a helpful english language tutor AI.", content = m })
+                model = "deepseek-chat",
+                messages = new[]
+     {
+        new { role = "system", content = "You are a helpful English language tutor AI." }
+    }.Concat(messages.Select(m => new { role = "user", content = m }))
             };
+
 
             var response = await client.PostAsJsonAsync("chat/completions", payload);
             response.EnsureSuccessStatusCode();
