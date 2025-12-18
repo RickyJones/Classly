@@ -24,7 +24,7 @@ namespace Classly.Controllers
         public IActionResult AIPrompts(AIPromptsModel model)
         {
             _courseNotesService.UpdateAIPrompts(model);
-            return View();
+            return RedirectToAction("Index");
         }
 
     }

@@ -250,7 +250,6 @@ WHERE cn.StudentId = @StudentId
             AITablePrompt = @AITablePrompt,
             AIHomewrokPrompt = @AIHomewrokPrompt,
             AILessonPlanPrompt = @AILessonPlanPrompt
-        WHERE Id = @Id;
     ";
 
             using var cmd = new MySqlCommand(sql, conn);

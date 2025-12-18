@@ -5,6 +5,7 @@
 /.vs/Classly/CopilotIndices/17.14.995.13737
 /.vs
 /bin/Debug/net8.0
+/bin/Release/net8.0
 /obj
 /Models/TestKeys.cs
 /bin/Release/net8.0/linux-x64
