@@ -21,12 +21,15 @@ namespace Classly.Controllers
         private readonly IUserService _userService;
         private readonly SiteSettings _settings;
         private readonly IAIService _aiService;
-        public CourseNotesController(ICourseNotesService courseNotesService, IUserService userService, IOptions<SiteSettings> options, IAIService aiService)
+        private readonly IHomeworkSubmissionService _homeworkSubmissionService;
+        public CourseNotesController(ICourseNotesService courseNotesService, IUserService userService, 
+            IOptions<SiteSettings> options, IAIService aiService, IHomeworkSubmissionService hwServ)
         {
             _courseNotesService = courseNotesService;
             _userService = userService;
             _settings = options.Value;
             _aiService = aiService;
+            _homeworkSubmissionService = hwServ;
         }
 
         public IActionResult Index()
@@ -171,6 +174,12 @@ namespace Classly.Controllers
             return new RedirectToActionResult("ViewNote", "CourseNotes", new { noteId = createdNote.Id });
             // Pass AI output to a view
             //return View("ViewAIGen", new AINotesResponse{ tablesResponse = tablesResponse, tasks = homeworkResponse });
+        }
+
+        public IActionResult ViewHomework(Guid homeworkId)
+        {
+            var hw = _homeworkSubmissionService.GetSubmissionById(homeworkId);
+            return View(hw);
         }
     }
 }
