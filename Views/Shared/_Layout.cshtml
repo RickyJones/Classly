@@ -8,64 +8,22 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Classly.styles.css" asp-append-version="true" />
-    <style>
-        .action-li {
-            background-color: darkorange;
-            border-radius: 8px;
-        }
+    <link rel="stylesheet" href="~/css/site.css" />
 
-        .action-li-outline {
-            border-color: darkorange;
-            border-radius: 8px;
-        }
-
-        .rounded-pill {
-            width: fit-content;
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-top: 8px;
-            padding-bottom: 8px;
-        }
-
-        .btn-primary {
-            background-color: darkorange;
-            color: white;
-        }
-
-        p {
-            color: dimgrey;
-        }
-
-        .bg-primary {
-            background-color: darkorange !important;
-        }
-
-        .bg-secondary {
-            background-color: #80808029 !important;
-            color: grey;
-        }
-
-        .avatar-bg {
-            background-color: #ff8c004f;
-            width: 50px;
-            height: 50px;
-            border-radius: 30px;
-        }
-
-        .navbar-subs {
-            border-top-color: orange;
-            border-bottom-color: orange;
-            border-bottom-style: solid;
-
-        }
-    </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-4">
             <div class="container-fluid">
                 
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Classly</a>
+                    <a class="navbar-brand p-0"
+   asp-area=""
+   asp-controller="Home"
+   asp-action="Index">
+    <img src="~/img/logo.png"
+         alt="Classly"
+         class="navbar-logo" />
+</a>
 
                 <div class="d-sm-inline-flex justify-content-between">
                     <ul class="d-flex flex-row flex-wrap align-items-center list-unstyled mb-0">
@@ -124,6 +82,9 @@
                         @if(User.Claims.Any(x => x.Type == "IsTutor")){
                             <li class="nav-item me-4">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="CourseNotes" asp-action="Index">Course Notes</a>
+                            </li>
+                            <li class="nav-item me-4">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="CourseNotes" asp-action="Index">Homework</a>
                             </li>
                         }
                             @if ((email ?? string.Empty).ToLower() == "rickyjones28@gmail.com" ||

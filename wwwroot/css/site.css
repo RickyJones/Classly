@@ -9,7 +9,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #eb8613b9;
 }
 
 html {
@@ -47,3 +47,645 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #f1f1f1; /* highlight row on hover */
 }
+
+/* Optional: centre vertically */ 
+
+/* -------------------------
+   Login / Register page polish (scoped)
+   ------------------------- */
+
+/* Subtle page background */
+body {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 60%);
+}
+
+/* Card */
+.form-signin {
+    max-width: 420px;
+    margin: 64px auto;
+    padding: 28px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* Title */
+.form-signin h1 {
+    margin-bottom: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+/* Labels feel cleaner */
+.form-signin label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* Inputs: slightly taller + nicer focus */
+.form-signin .form-control {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.12);
+}
+
+.form-signin .form-control:focus {
+    border-color: rgba(255, 140, 0, 0.55);
+    box-shadow: 0 0 0 0.2rem rgba(255, 140, 0, 0.18);
+}
+
+/* Button: full-width, modern, consistent */
+.form-signin button.btn {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+/* Link row: tidy + aligned */
+.form-signin p {
+    margin-top: 14px;
+}
+
+.form-signin p i {
+    color: rgba(0,0,0,0.65);
+}
+
+/* Footer */
+.form-signin .text-muted,
+.form-signin p.mt-5 {
+    margin-top: 24px !important;
+    text-align: center;
+}
+
+/* Login button hover / focus */
+.form-signin button.btn-primary:hover,
+.form-signin button.btn-primary:focus {
+    background-color: #e67e00;   /* darker orange */
+    border-color: #e67e00;
+}
+
+/* Back to login link */
+.form-signin .login-back-link {
+    margin-bottom: 18px;
+}
+
+.form-signin .login-back-link a {
+    color: rgba(0,0,0,0.6);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.form-signin .login-back-link a:hover {
+    color: #e67e00; /* match your orange hover */
+    text-decoration: underline;
+}
+
+/* Auth header: title + back link */
+.form-signin .auth-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+/* Back to login link */
+.form-signin .auth-back-link {
+    font-size: 0.9rem;
+    color: #000;               /* black by default */
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.form-signin .auth-back-link:hover {
+    color: #e67e00;            /* orange on hover */
+    text-decoration: underline;
+}
+
+/* Navbar logo */
+.navbar-logo {
+    height: 45px;   /* adjust if needed */
+    width: auto;
+    display: block;
+}
+
+.form-signin {
+  font-family:
+    system-ui, 
+    -apple-system, 
+    BlinkMacSystemFont, 
+    "Segoe UI", /* Windows (Global & CN) */
+    "PingFang SC", /* Chinese OS */
+    "Microsoft YaHei", /* Chinese OS */
+    Arial, 
+    sans-serif; 
+}
+
+/* ============================
+   USER PROFILE PAGE STYLING
+   ============================ */
+
+/* Page background */
+body {
+    background:
+        radial-gradient(1000px 600px at 10% 10%, rgba(255,140,0,.10), transparent 60%),
+        radial-gradient(800px 500px at 90% 20%, rgba(255,140,0,.06), transparent 55%),
+        #f6f7fb;
+}
+
+/* Main profile card */
+.container .card.shadow-sm {
+    border-radius: 18px;
+    border: none;
+    box-shadow: 0 18px 40px rgba(0,0,0,.08);
+    overflow: hidden;
+}
+
+/* Avatar */
+.container img.rounded-circle {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    background: #fff;
+    padding: 6px;
+    border-radius: 50%;
+    box-shadow: 
+        0 0 0 4px #fff,
+        0 0 0 8px rgba(255,140,0,.35),
+        0 12px 25px rgba(0,0,0,.12);
+}
+
+/* Card body spacing */
+.card-body {
+    padding: 24px 28px;
+}
+
+/* Name */
+.card-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #222;
+}
+
+/* Role + info text */
+.card-text {
+    margin-bottom: 8px;
+}
+
+.card-text.text-muted i {
+    color: #ff8c00;
+    margin-right: 6px;
+}
+
+/* Divider between content and footer */
+.card-footer {
+    border-top: 1px solid rgba(0,0,0,.06);
+    padding: 16px;
+}
+
+/* Footer buttons */
+.card-footer .btn-link {
+    font-weight: 600;
+    color: #ff8c00;
+    padding: 10px 16px;
+    border-radius: 12px;
+    transition: all .15s ease;
+}
+
+.card-footer .btn-link:hover {
+    background: rgba(255,140,0,.12);
+    text-decoration: none;
+}
+
+/* ============================
+   UPDATE FORM CARD
+   ============================ */
+/* Top navigation links hover effect */
+
+nav a,
+.navbar a {
+    font-weight: 600;
+    transition: color .15s ease;
+}
+
+nav a:hover,
+.navbar a:hover {
+    color: #ff8c00 !important;
+    font-weight: 700;
+}
+
+.container > .card.shadow-sm.p-2 {
+    margin-top: 40px !important;
+    border-radius: 18px;
+    border: none;
+    padding: 28px !important;
+    box-shadow: 0 18px 40px rgba(0,0,0,.08);
+    background: #fff;
+}
+
+/* Form labels */
+.form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Inputs */
+.form-control {
+    border-radius: 12px;
+    padding: 12px 14px;
+    border: 1px solid rgba(0,0,0,.12);
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.form-control:focus {
+    border-color: #ff8c00;
+    box-shadow: 0 0 0 4px rgba(255,140,0,.15);
+}
+
+/* Update button */
+.btn-primary {
+    background: linear-gradient(135deg, #ff8c00, #ff7300);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-weight: 600;
+    box-shadow: 0 10px 22px rgba(255,140,0,.35);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(255,140,0,.45);
+}
+
+/* Validation text */
+.text-danger {
+    font-size: .85rem;
+    margin-top: 4px;
+}
+
+/* Better vertical spacing on mobile */
+@media (max-width: 768px) {
+    .container .card.shadow-sm {
+        margin-top: 40px !important;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+}
+
+.card-body i {
+    width: 18px;
+    text-align: center;
+    margin-right: 7px;
+}
+
+/* ============================
+   COURSE NOTES PAGE SPACING
+   ============================ */
+/* Page container breathing room */
+.course-notes-page,
+.courseNotes {
+    padding-top: 48px;
+    padding-bottom: 48px;
+}
+
+/* Page title */
+.course-notes h1,
+.course-notes h2 {
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+/* New Session button spacing */
+.course-notes .btn,
+.course-notes button {
+    margin-top: 12px;
+    margin-bottom: 28px;
+}
+
+/* Section headings */
+.course-notes h3,
+.course-notes h4 {
+    margin-top: 32px;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+/* Left column spacing (Sessions list) */
+.course-notes .left-column,
+.course-notes .sessions-column {
+    padding-right: 40px;
+}
+
+/* Right column spacing (Latest Homework Submissions) */
+.course-notes .right-column {
+    padding-left: 40px;
+}
+
+/* Align top of both columns */
+.course-notes .row > div {
+    padding-top: 8px;
+}
+
+/* Mobile spacing fixes */
+@media (max-width: 768px) {
+    .course-notes .left-column,
+    .course-notes .sessions-column,
+    .course-notes .right-column {
+        padding-left: 0;
+        padding-right: 0;
+        margin-bottom: 40px;
+    }
+}
+/* ============================
+   TUTOR DASHBOARD PAGE LAYOUT
+   ============================ */
+
+/* Page container – no extra padding */
+.tutor-dashboard-page,
+.tutorDashboard {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+/* Override Bootstrap py-5 on the section */
+.tutor-dashboard section,
+.tutor-dashboard section.py-5 {
+    padding-top: 70px !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 0;
+}
+
+/* Kill extra spacing on the row (py-lg-5) */
+.tutor-dashboard section .row,
+.tutor-dashboard section .row.py-lg-5 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Page title – minimal gap above & below */
+.tutor-dashboard h1,
+.tutor-dashboard h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    line-height: 1.1;
+}
+
+/* Card area sits right under the title */
+.tutor-dashboard .album {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+/* Stack cards vertically + centre */
+.tutor-dashboard .album .row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+
+    max-width: 440px;
+    margin: 0 auto;
+}
+
+/* Card styling */
+.tutor-dashboard .card {
+    width: 420px;
+    max-width: 100%;
+    border-radius: 14px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 18px rgba(0,0,0,.04);
+    overflow: hidden;
+}
+
+/* Just in case any svg placeholders remain */
+.tutor-dashboard svg.bd-placeholder-img {
+    display: none;
+}
+
+/* Card content spacing */
+.tutor-dashboard .card-body {
+    padding: 18px 20px;
+    text-align: center;
+}
+
+/* Text */
+.tutor-dashboard .card-text {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+/* Links */
+.tutor-dashboard .btn-group a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #ff8a00;
+}
+
+.tutor-dashboard .btn-group a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+    .tutor-dashboard .card {
+        width: 100%;
+        margin: 0 14px;
+    }
+
+    .tutor-dashboard .album .row {
+        max-width: 100%;
+    }
+}
+
+/* ============================
+   STUDENT MANAGEMENT PAGE
+   ============================ */
+
+.student-management {
+    padding-top: 32px;
+    padding-bottom: 48px;
+}
+
+/* Main page title */
+.student-management h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+}
+
+/* Layout of the two columns */
+.student-management .row {
+    align-items: flex-start;
+    column-gap: 40px;
+}
+
+/* Left column: student list card */
+.student-management .list-group {
+    border-radius: 16px;
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+    padding: 4px 0;
+}
+
+.student-management .list-group-item {
+    border: 0;
+    border-bottom: 1px solid #f5f5f5;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.98rem;
+}
+
+.student-management .list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Email link style */
+.student-management .list-group-item a {
+    font-size: 0.9rem;
+    color: #ff8a00;
+    text-decoration: none;
+}
+
+.student-management .list-group-item a:hover {
+    text-decoration: underline;
+}
+
+/* Right column: invite panel */
+.student-management .col:last-child {
+    max-width: 520px;
+    margin-left: auto;
+}
+
+.student-management .col:last-child h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.student-management .col:last-child p {
+    color: #555;
+    margin-bottom: 14px;
+}
+
+/* Invite URL pill */
+.student-management .copy-box {
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 999px;
+    padding: 10px 16px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.student-management .copy-box:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Long URL behaviour */
+.student-management #registerUrl {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+/* Copy button styling */
+.student-management .copy-box .btn {
+    border-radius: 999px;
+    border-color: #ff8a00;
+    color: #ff8a00;
+    padding-inline: 10px;
+}
+
+.student-management .copy-box .btn:hover {
+    background-color: #ff8a00;
+    color: #ffffff;
+    border-color: #ff8a00;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+    .student-management {
+        padding-top: 24px;
+    }
+
+    .student-management .row {
+        row-gap: 32px;
+    }
+
+    .student-management .col:last-child {
+        max-width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* ============================
+   Navbar (My Profile / Course Notes / Homework)
+   ============================ */
+        .action-li {
+            background-color: darkorange;
+            border-radius: 8px;
+        }
+
+        .action-li-outline {
+            border-color: darkorange;
+            border-radius: 8px;
+        }
+
+        .rounded-pill {
+            width: fit-content;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 0px;
+            padding-bottom: 8px;
+        }
+
+        .btn-primary {
+            background-color: darkorange;
+            color: white;
+        }
+
+        p {
+            color: dimgrey;
+        }
+
+        .bg-primary {
+            background-color: darkorange !important;
+        }
+
+        .bg-secondary {
+            background-color: #80808029 !important;
+            color: grey;
+        }
+
+        .avatar-bg {
+            background-color: #ff8c004f;
+            width: 50px;
+            height: 50px;
+            border-radius: 30px;
+        }
+
+        .navbar-subs {
+            border-top-color: orange;
+            border-bottom-color: orange;
+            border-bottom-style: solid;
+
+        } 
+.container > .navbar-subs {
+  margin-bottom: 40px;
+}
+
+

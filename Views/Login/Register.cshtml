@@ -1,7 +1,14 @@
 ﻿
 <form method="post" action="register" class="form-signin">
 @*     <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> *@
-    <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+    @* =<h1 class="h3 mb-3 font-weight-normal">Register</h1> *@
+    <div class="auth-header">
+    <h1 class="h3 font-weight-normal mb-0">Register</h1>
+
+    <a href="javascript:history.back()" class="auth-back-link">
+    ← Back to Login
+</a>
+</div>
     @if (ViewBag.Error != null)
     {
         <div class="alert alert-danger">
@@ -24,5 +31,6 @@
 
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-    <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+    <p class="mt-5 mb-3 text-muted">© 2025</p>
+
 </form>
