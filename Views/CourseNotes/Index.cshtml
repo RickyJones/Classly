@@ -16,103 +16,81 @@
     }
 }
 
-<style>
-    .timeline {
-        position: relative;
-        margin: 20px 10px;
-        padding-left: 0px; /* space for markers */
-        border-left: 5px solid orange; /* vertical line */
-    }
+@if (Model == null)
+{
+    <h1 class="notes-main-title">Student's Notes</h1>
 
-    .timeline-item {
-        position: relative;
-        margin-bottom: 50px;
-    }
-
-    .timeline-marker {
-        position: absolute;
-        left: -14px; /* centers marker on line */
-        top: 0;
-        width: 20px;
-        height: 20px;
-        background-color: orange; /* blue blob */
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 0 0 2px orange;
-    }
-
-    .timeline-content {
-        padding: 1px 25px;
-    }
-
-    .timeline-title {
-        margin: 0;
-        font-size: 1.1em;
-        font-weight: bold;
-    }
-
-    .timeline-date {
-        margin: 0;
-        font-size: 0.9em;
-        color: #666;
-    }
-
-</style>
-
-<h1>Course Notes</h1>
-
-@if(Model == null){
-<form method="post">
-    <label>Please select a student</label>
-    <select name="studentId" class="form-select">
-        @foreach (var student in await userService.GetStudentsAsync())
-        {
-            <option value="@student.Id">@student.Name (@student.Email)</option>
-        }
-    </select>
-    <br/>
-    <button class="btn btn-primary" type="submit">Get Student Notes</button>
-</form>
+    <form method="post">
+        <label>Please select a student from the list below</label>
+        <select name="studentId" class="form-select">
+            @foreach (var student in await userService.GetStudentsAsync())
+            {
+                <option value="@student.Id">@student.Name (@student.Email)</option>
+            }
+        </select>
+        <br />
+        <button class="btn btn-primary" type="submit">Get Student Notes</button>
+    </form>
 }
-else {
-    <div class="row">
-        <div class="col-6">
-            <button class="btn btn-primary" onclick="location.href='@Url.Action("UploadStudyNotes", new { studentId = ViewBag.StudentId })'">New Session</button>
-            <h3>Sessions with @student?.Name</h3>
-            <div class="timeline">
-                @foreach (var note in Model)
-                {
-                    <div class="timeline-item">
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">@note.Difficulty</h3>
-                            <p class="timeline-date">@note.CreatedAt</p>
-                            <p>Teacher: @teacher?.Name</p>
-                            <button onclick="location.href='@Url.Action("ViewNote", new { noteId = note.Id })'">View</button>
-                        </div>
-                    </div>
-                }
+else
+{
+    <div class="course-notes-page">
+        <!-- Top row: Student's Notes + Latest Homework Submissions aligned -->
+        <div class="row align-items-center notes-header-row">
+            <div class="col-6">
+                <h1 class="notes-main-title mb-0">Student's Notes</h1>
+            </div>
+            <div class="col-6 text-end">
+                <h2 class="homework-title mb-0">Latest Homework Submissions</h2>
             </div>
         </div>
-        <div class="col-6">
-            <h2 class="mb-3">Latest Homework Submissions</h2>
-            <ul class="list-group">
-                @foreach (var h in hw)
-                {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a href="@Url.Action("ViewHomework", new { homeworkId = h.Id })" class="btn btn-sm btn-primary">
-                            View Homework
-                        </a>
-                        <span class="badge bg-secondary">
-                            @(h.CreatedAt?.ToString("dd/MM/yyyy") ?? "--")
-                        </span>
-                    </li>
-                }
-            </ul>
+
+        <div class="row mt-4">
+            <div class="col-6">
+                <button class="btn btn-primary notes-add-btn"
+                        onclick="location.href='@Url.Action("UploadStudyNotes", new { studentId = ViewBag.StudentId })'">
+                    Add Notes
+                </button>
+
+                <h3 class="notes-subtitle">Previous Class Notes @student?.Name</h3>
+
+                <div class="timeline">
+                    @foreach (var note in Model)
+                    {
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">@note.Difficulty</h3>
+                                <p class="timeline-date">@note.CreatedAt</p>
+                                <p>Teacher: @teacher?.Name</p>
+                                <button class="btn btn-outline-secondary btn-sm"
+                                        onclick="location.href='@Url.Action("ViewNote", new { noteId = note.Id })'">
+                                    View
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-6">
+                <ul class="list-group">
+                    @foreach (var h in hw)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="@Url.Action("ViewHomework", new { homeworkId = h.Id })"
+                               class="btn btn-sm btn-primary">
+                                View Homework
+                            </a>
+                            <span class="badge bg-secondary">
+                                @(h.CreatedAt?.ToString("dd/MM/yyyy") ?? "--")
+                            </span>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
-
     </div>
-
 }
 
 @* Add this in for timeline UI *@

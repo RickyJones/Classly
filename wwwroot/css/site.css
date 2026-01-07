@@ -410,15 +410,14 @@ nav a:hover,
     padding-bottom: 0px;
 }
 
-/* Override Bootstrap py-5 on the section */
+/* Override Bootstrap py-5 on the section (smaller top spacing) */
 .tutor-dashboard section,
 .tutor-dashboard section.py-5 {
-    padding-top: 70px !important;
+    padding-top: 28px !important;   /* ↓ was 70px */
     padding-bottom: 4px !important;
     margin-bottom: 0;
 }
 
-/* Kill extra spacing on the row (py-lg-5) */
 .tutor-dashboard section .row,
 .tutor-dashboard section .row.py-lg-5 {
     padding-top: 0 !important;
@@ -511,17 +510,16 @@ nav a:hover,
     padding-bottom: 48px;
 }
 
-/* Main page title */
+/* Main page titles (general h2 styling) */
 .student-management h2 {
     font-size: 2.4rem;
     font-weight: 700;
     margin-bottom: 28px;
 }
 
-/* Layout of the two columns */
-.student-management .row {
-    align-items: flex-start;
-    column-gap: 40px;
+/* Only move the FIRST/top h2 ("Your Students") up */
+.student-management > h2 {
+    margin-top: -10px;   /* adjust this value to taste (e.g. -6, -8, -12) */
 }
 
 /* Left column: student list card */
@@ -531,6 +529,8 @@ nav a:hover,
     border: 1px solid #f0f0f0;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
     padding: 4px 0;
+    max-width: 520px;   /* <<< limit width */
+    width: 100%;
 }
 
 .student-management .list-group-item {
@@ -561,7 +561,8 @@ nav a:hover,
 /* Right column: invite panel */
 .student-management .col:last-child {
     max-width: 520px;
-    margin-left: auto;
+    margin-left: 30px;
+    margin-top: -70px;   /* reset so only the title moves, not the whole column */
 }
 
 .student-management .col:last-child h3 {
@@ -577,7 +578,7 @@ nav a:hover,
 
 /* Invite URL pill */
 .student-management .copy-box {
-    background-color: #ffffff;
+    background-color: hsl(0, 0%, 100%);
     border: 1px solid #f0f0f0;
     border-radius: 999px;
     padding: 10px 16px;
@@ -616,6 +617,7 @@ nav a:hover,
     border-color: #ff8a00;
 }
 
+
 /* Mobile tweaks */
 @media (max-width: 768px) {
     .student-management {
@@ -650,7 +652,7 @@ nav a:hover,
             padding-left: 10px;
             padding-right: 10px;
             padding-top: 0px;
-            padding-bottom: 8px;
+            padding-bottom: 0px;
         }
 
         .btn-primary {
@@ -688,4 +690,241 @@ nav a:hover,
   margin-bottom: 40px;
 }
 
+/* ============================
+   Course Notes Page
+   ============================ */
 
+.course-notes-page {
+    margin-top: -50px;   /* reduces gap under navbar */
+}
+
+/* ---- Main Page Title ---- */
+.notes-main-title {
+    font-size: 2.5rem;
+    font-weight: 500;
+    padding-top: 12px;
+    padding-bottom: 5px;
+    margin-bottom: 6px;
+}
+
+/* ---- Top Headings Row ---- */
+.notes-header-row {
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* ---- Latest Homework Submissions ---- */
+.homework-title {
+    font-size: 2.5rem;
+    font-weight: 500;
+    line-height: 1.1;
+    text-align: right;
+}
+
+/* ---- Add Notes Button ---- */
+.btn.notes-add-btn {
+    margin-top: 4px;
+    margin-bottom: 14px;
+
+    padding: 10px 35px;     /* now this WILL override bootstrap */
+    font-size: 1.3rem;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* ---- Previous Class Notes ---- */
+.notes-subtitle {
+    font-size: 2.5rem;     /* matches Student's Notes */
+    font-weight: 500;    /* same boldness */
+    margin-top: 18px;    /* sits nicely under button */
+}
+
+
+/* ============================
+   Timeline
+   ============================ */
+
+.timeline {
+    position: relative;
+    margin: 10px 0 20px;
+    padding-left: 0;
+    border-left: 5px solid orange;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -14px;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-color: orange;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px orange;
+}
+
+.timeline-content {
+    padding: 1px 25px;
+}
+
+.timeline-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.timeline-date {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666666;
+}
+/* ==== Notes page layout ==== */
+
+.notes-page {
+    padding-top: 0px;
+    padding-bottom: 48px;
+}
+
+.notes-title {
+    font-size: 2.6rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.notes-meta label {
+    font-size: 1rem;
+    color: #555;
+    text-align: center;
+}
+
+.notes-section-heading {
+    margin-top: 20px;
+    margin-bottom: 12px;
+    font-weight: 700;
+    font-size: 2.1rem;
+    text-align: center;
+}
+
+
+
+/* ==== Content table (Model.Notes) ==== */
+
+.notes-content table {
+    width: 85%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+    margin-bottom: 32px;
+    font-size: 1.05rem;
+}
+
+.notes-content th {
+    text-align: center;
+    vertical-align: middle;
+}
+.notes-content td {
+    padding: 10px 14px;
+    
+}
+.notes-content td:first-child {
+    font-weight: 700;
+}
+.notes-content thead th {
+    background-color: darkorange;
+    color: #ffffff;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.notes-content tbody tr:nth-child(even) {
+    background-color: #fff9f2;
+}
+
+.notes-content tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.notes-content tbody tr:hover {
+    background-color: #ffe4c2;
+}
+
+/* ==== Cards: Homework & Next lesson plan ==== */
+
+.notes-difficulty {
+    display: inline-block;
+    margin-bottom: 16px;
+    font-size: 0.98rem;
+}
+
+.notes-difficulty b {
+    color: darkorange;
+}
+
+.notes-page .card {
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+}
+
+.notes-page .card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #333;
+}
+.card-heading {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #333;
+    margin-top: 60px;
+    padding-bottom: 40px;
+    text-align: center;
+}
+
+.notes-page .card-body {
+    width: 85%;
+    border-radius: 16px;
+    font-size: 0.96rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    text-align: center;
+}
+/* Homework card — controls size + position, NOT text */
+.card.homework-card {
+    width: 85%;
+    margin: 0 auto;              /* centres the card */
+    border: 2px solid darkorange !important;
+    border-radius: 18px;
+}
+/* Text in Homework card */
+.homework-card {
+    width: 85%;
+    border-radius: 16px;
+}
+.card.NextLessonPlan-card {
+    width: 85%;
+    margin: 0 auto;              /* centres the card */
+    border: 2px solid darkorange !important;
+    border-radius: 18px;
+}
+
+/* Small screen spacing */
+
+@media (max-width: 767.98px) {
+    .notes-page {
+        padding-top: 24px;
+    }
+
+    .notes-title {
+        font-size: 2.2rem;
+    }
+}
