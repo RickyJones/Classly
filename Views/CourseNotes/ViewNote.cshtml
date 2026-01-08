@@ -1,9 +1,11 @@
 ﻿@using Classly.Models.Courses
+@using Newtonsoft.Json
 @model CourseNote
 
 <link rel="stylesheet" href="~/css/notes.css" asp-append-version="true" />
 
 @{
+    GeneratedHomeworkModel homeworkTasks = JsonConvert.DeserializeObject<GeneratedHomeworkModel>(Model.Homework);
 }
 @using Markdig
 <h1 class="notes-title">@ViewBag.Student's Notes</h1>
@@ -28,10 +30,56 @@
 
 <div class="row">
     <div class="col">
-        <div class="card shadow-sm mb-3 homework-card">
-    <div class="card-body">
-                <label><b>Difficulty: @Model.Difficulty</b></label>
-                @Html.Raw(Model.Homework.Replace("\n", "<br/>"))
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h3 class="card-title">Homework</h3>
+                <h3>Fill in the blanks</h3>
+                <ul>
+                    @foreach (var q in homeworkTasks.FillInTheBlanksQuestions)
+                    {
+                        <li>@q.SentenceWithBlanks</li>
+                    }
+                </ul>
+                <h3>Select the correct option</h3>
+                @foreach (var q in homeworkTasks.QuestionsWithOptions)
+                {
+                    <p>@q.Question</p>
+                
+                    <br />
+                    <ul>
+                        @foreach (var a in q.PossibleAnswers)
+                        {
+                            <li>@a</li>
+                        }
+                    </ul>
+                }
+                <h3>Sentence Matching</h3>
+                <div class="row">
+                    <div class="col">
+                        <ul>
+                            @* will likley need to shuffle these up *@
+                            @foreach (var p1 in homeworkTasks.SentenceMatching.Pairs.Select(x => x.FirstHalf))
+                            {
+                                <li>@p1</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col">
+                        <ul>
+                            @foreach (var p1 in homeworkTasks.SentenceMatching.Pairs.Select(x => x.SecondHalf))
+                            {
+                                <li>@p1</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <h3>Create your own sentences which use the words below</h3>
+                <ul>
+                    @foreach (var q in homeworkTasks.CreateYourOwnSentences.Select(x => x.WordToInclude))
+                    {
+                        <li>@q</li>
+                    }
+                </ul>
             </div>
         </div>
     </div>

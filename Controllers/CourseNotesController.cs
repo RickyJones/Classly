@@ -4,9 +4,11 @@ using Classly.Models.Config;
 using Classly.Services;
 using Classly.Services.AI;
 using Classly.Services.Data;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using OpenAI.Chat;
 using System.Security.Claims;
 using System.Text;
@@ -14,7 +16,7 @@ using System.Text.Json;
 
 namespace Classly.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CourseNotesController : Controller
     {
         private readonly ICourseNotesService _courseNotesService;
@@ -81,14 +83,26 @@ namespace Classly.Controllers
                 }
                 else
                 {
-                    // Treat as binary
-                    using var ms = new MemoryStream();
-                    await model.FileUpload.CopyToAsync(ms);
-                    var fileBytes = ms.ToArray();
+                    var file = model.FileUpload;
 
-                    // You can store the bytes, or hand them off to a parser depending on type
-                    // e.g. if PDF: use a PDF library to extract text
-                    notesContent = $"[Binary file uploaded: {contentType}, {fileBytes.Length} bytes]";
+                    bool isDocx =
+                        file.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                        Path.GetExtension(file.FileName).Equals(".docx", StringComparison.OrdinalIgnoreCase);
+
+                    if (isDocx)
+                    {
+                        notesContent = ExtractTextFromWordDoc(file);
+                    } else
+                    {
+                        // Treat as binary
+                        using var ms = new MemoryStream();
+                        await model.FileUpload.CopyToAsync(ms);
+                        var fileBytes = ms.ToArray();
+
+                        // You can store the bytes, or hand them off to a parser depending on type
+                        // e.g. if PDF: use a PDF library to extract text
+                        notesContent = $"[Binary file uploaded: {contentType}, {fileBytes.Length} bytes]";
+                    }
                 }
             }
 
@@ -126,11 +140,16 @@ namespace Classly.Controllers
 
             var homeworkMessages = new List<string>
             {
-                prompts.AIHomewrokPrompt + $"Group the homework into question type(s) ({specifyHomeworkType}). Produce 10 questions for each question type at difficulty: " + difficulty
+                prompts.AIHomewrokPrompt + $"Create JSON that can be parsed my the given models structure, wrapping the JSON I need in <content></content>, producing 10 items for each question type at difficulty: " + difficulty + ". Model: " + ModelDefinition
             };
 
             var homeworkResponse = await _aiService.AskAIAsync(homeworkMessages);
+            startIndex = homeworkResponse.IndexOf(startTag) + startTag.Length;
+            endIndex = homeworkResponse.IndexOf(endTag);
 
+            homeworkResponse = homeworkResponse.Substring(startIndex, endIndex - startIndex);
+            //check it parses
+            var hwStrong = JsonConvert.DeserializeObject<GeneratedHomeworkModel>(homeworkResponse);
 
             string lessonPlanResponse = string.Empty;
             if (createNextLessonPlan)
@@ -155,7 +174,7 @@ namespace Classly.Controllers
                 Timestamp = DateTime.UtcNow
             };
 
-            string json = JsonSerializer.Serialize(structured, new JsonSerializerOptions { WriteIndented = true });
+            string json = System.Text.Json.JsonSerializer.Serialize(structured, new JsonSerializerOptions { WriteIndented = true });
 
             var createdNote = await _courseNotesService.CreateCourseNoteAsync(new Models.Courses.CourseNote
             {
@@ -176,10 +195,65 @@ namespace Classly.Controllers
             //return View("ViewAIGen", new AINotesResponse{ tablesResponse = tablesResponse, tasks = homeworkResponse });
         }
 
+        private string ExtractTextFromWordDoc(IFormFile file)
+        {
+            using (var ms = new MemoryStream())
+            {
+                file.OpenReadStream().CopyTo(ms);
+
+                using (var doc = WordprocessingDocument.Open(ms, false))
+                {
+                    return doc.MainDocumentPart.Document.Body.InnerText;
+                }
+            }
+        }
+
+
         public IActionResult ViewHomework(Guid homeworkId)
         {
             var hw = _homeworkSubmissionService.GetSubmissionById(homeworkId);
             return View(hw);
         }
+
+        private string ModelDefinition => @"
+public class GeneratedHomeworkModel
+    {
+        public FillInTheBlanks[] FillInTheBlanksQuestions { get; set; }
+        public QuestionWithOptions[] QuestionsWithOptions { get; set; }
+        public SentenceMatching SentenceMatching { get; set; }
+        public CreateYourOwnSentences[] CreateYourOwnSentences { get; set; }
+    }
+
+    public class FillInTheBlanks
+    {
+        public string SentenceWithBlanks { get; set; }
+        public string CorrectSentence { get; set; }
+    }
+
+    public class QuestionWithOptions
+    {
+        public string Question { get; set; }
+        public string[] PossibleAnswers { get; set; }
+        public string CorrectAnswer { get; set; }
+    }
+
+    public class SentenceMatching
+    {
+        /// <summary>
+        /// Each pair contains the first half and second half of a sentence.
+        /// </summary>
+        public SentencePair[] Pairs { get; set; }
+    }
+
+    public class SentencePair
+    {
+        public string FirstHalf { get; set; }
+        public string SecondHalf { get; set; }
+    }
+
+    public class CreateYourOwnSentences
+    {
+        public string WordToInclude { get; set; }
+    }";
     }
 }

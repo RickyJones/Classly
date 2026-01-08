@@ -3,6 +3,7 @@
 @model HomeworkSubmission
 @{
     var notes = JsonConvert.DeserializeObject<CourseNote>(ViewBag.Notes);
+    GeneratedHomeworkModel homeworkTasks = JsonConvert.DeserializeObject<GeneratedHomeworkModel>(notes.Homework);
 }
 
 <h1>Homework submission</h1>
@@ -24,7 +25,53 @@
     </div>
     <div class="col">
         <h2>Tasks</h2>
-        @Html.Raw(notes.Homework)
+      @*   @Html.Raw(notes.Homework) *@
+      <h3>Fill in the blanks</h3>
+      <ul>
+            @foreach (var q in homeworkTasks.FillInTheBlanksQuestions)
+            {
+                <li>@q.SentenceWithBlanks</li>
+            }
+      </ul>
+      <h3>Select the correct option</h3>
+        @foreach(var q in homeworkTasks.QuestionsWithOptions)
+        {
+            <p>@q.Question</p><br/>
+            <ul>
+                @foreach (var a in q.PossibleAnswers)
+                {
+                    <li>@a</li>
+                }
+            </ul>
+        }
+        <h3>Sentence Matching</h3>
+        <div class="row">
+            <div class="col">
+                <ul>
+                    @* will likley need to shuffle these up *@
+                    @foreach(var p1 in homeworkTasks.SentenceMatching.Pairs.Select(x => x.FirstHalf))
+                    {
+                        <li>@p1</li>
+                    }
+                </ul>
+            </div>
+            <div class="col">
+                <ul>
+                    @foreach (var p1 in homeworkTasks.SentenceMatching.Pairs.Select(x => x.SecondHalf))
+                    {
+                        <li>@p1</li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <h3>Create your own sentences which use the words below</h3>
+        <ul>
+            @foreach(var q in homeworkTasks.CreateYourOwnSentences)
+            {
+                <li>@q</li>
+            }
+        </ul>
+
         <h2>Lesson notes</h2>
         @Html.Raw(notes.Notes)
     </div>
